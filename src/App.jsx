@@ -1,10 +1,23 @@
-// App.jsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import AddEmployee from "./pages/EmployeeForm/AddEmployee";
+import EditEmployee from "./pages/EmployeeForm/EditEmployee";
+
 function App() {
   return (
-    <div>
-      <h1>HRMS</h1>
-      <p>Human Resource Management System</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/add-employee"
+          element={<AddEmployee />}
+        />
+
+        <Route
+          path="/edit-employee/:employeeId"
+          element={<EditEmployee />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
