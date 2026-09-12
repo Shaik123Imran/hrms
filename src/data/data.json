@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "generatedAt": "2026-09-11",
+    "notes": "Single source of truth shared across the whole HRMS project."
+  },
+  "users": [
+    {
+      "id": "u1",
+      "name": "Sneha Reddy",
+      "email": "admin@hrms.com",
+      "password": "admin123",
+      "role": "Admin"
+    },
+    {
+      "id": "u2",
+      "name": "Rahul Verma",
+      "email": "hr@hrms.com",
+      "password": "hr123",
+      "role": "HR Manager"
+    }
+  ],
+  "departments": [
+    "HR",
+    "IT",
+    "Non IT"
+  ],
+  "designations": [
+    "Software Engineer",
+    "Senior Software Engineer",
+    "Tech Lead",
+    "QA Engineer",
+    "HR Executive",
+    "HR Manager",
+    "Accountant",
+    "Marketing Specialist",
+    "Sales Executive",
+    "Operations Manager"
+  ],
+  "employees": [
+    {
+      "id": "e1",
+      "firstName": "Aarav",
+      "lastName": "Sharma",
+      "email": "aarav.sharma@hrms.com",
+      "phone": "+91 98450 11221",
+      "gender": "Male",
+      "dob": "1996-04-18",
+      "address": "12 MG Road, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "zip": "560038",
+      "department": "IT",
+      "designation": "Software Engineer",
+      "employeeType": "Full-time",
+      "status": "Active",
+      "joinDate": "2022-03-14",
+      "salary": 850000,
+      "managerId": "e4",
+      "skills": [
+        "React",
+        "Node.js",
+        "SQL"
+      ]
+    },
+    {
+      "id": "e2",
+      "firstName": "Priya",
+      "lastName": "Patel",
+      "email": "priya.patel@hrms.com",
+      "phone": "+91 98200 44556",
+      "gender": "Female",
+      "dob": "1993-09-02",
+      "address": "45 Velachery Main Road",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "zip": "600042",
+      "department": "IT",
+      "designation": "Senior Software Engineer",
+      "employeeType": "Full-time",
+      "status": "Active",
+      "joinDate": "2020-07-01",
+      "salary": 1200000,
+      "managerId": "e4",
+      "skills": [
+        "React",
+        "TypeScript",
+        "AWS",
+        "System Design"
+      ]
+    },
+    {
+      "id": "e3",
+      "firstName": "Rohan",
+      "lastName": "Gupta",
+      "email": "rohan.gupta@hrms.com",
+      "phone": "+91 99880 77665",
+      "gender": "Male",
+      "dob": "1998-01-25",
+      "address": "88 Banjara Hills",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "zip": "500034",
+      "department": "IT",
+      "designation": "Software Engineer",
+      "employeeType": "Full-time",
+      "status": "Active",
+      "joinDate": "2023-01-09",
+      "salary": 720000,
+      "managerId": "e4",
+      "skills": [
+        "JavaScript",
+        "Python",
+        "Docker"
+      ]
+    }
+  ]
+}
