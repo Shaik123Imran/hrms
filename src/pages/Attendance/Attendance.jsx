@@ -48,6 +48,7 @@ export default function Attendance() {
       late: daily.filter((record) => record.status === 'Late').length,
       absent: daily.filter((record) => record.status === 'Absent').length,
       leave: daily.filter((record) => record.status === 'On Leave').length,
+      halfDay: daily.filter((record) => record.status === 'Half Day').length,
     };
   }, [records, date]);
 
@@ -101,6 +102,15 @@ export default function Attendance() {
             <div className="stat-value">{summary.leave + summary.absent}</div>
           </div>
         </div>
+        <div className="stat-card">
+          <div className="stat-icon purple">
+            <Clock size={22} />
+          </div>
+          <div>
+            <div className="stat-label">Half Day</div>
+            <div className="stat-value">{summary.halfDay}</div>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-3 mb-4" style={{ gridTemplateColumns: '220px 1fr', alignItems: 'center' }}>
@@ -112,7 +122,7 @@ export default function Attendance() {
           ))}
         </select>
         <div className="flex gap-2" style={{ flexWrap: 'wrap' }}>
-          {['All', 'Present', 'WFH', 'Late', 'Absent', 'On Leave'].map((item) => (
+          {['All', 'Present', 'WFH', 'Late', 'Absent', 'On Leave', 'Half Day'].map((item) => (
             <button
               key={item}
               className={`chip${statusFilter === item ? ' active' : ''}`}
