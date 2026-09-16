@@ -7,7 +7,6 @@ import { ArrowLeft } from "lucide-react";
 import { validateEmployee } from "./employeeValidation";
 function EmployeeForm({ mode = "add", employee }) {
   const navigate = useNavigate();
-
   const emptyForm = {
     firstName: "",
     lastName: "",
@@ -28,21 +27,17 @@ function EmployeeForm({ mode = "add", employee }) {
     managerId: "",
     skills: []
   };
-
   const [formData, setFormData] = useState(
     employee || emptyForm
   );
   const [errors, setErrors] = useState({});
-
   useEffect(() => {
     if (employee) {
       setFormData(employee);
     }
   }, [employee]);
-
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setFormData((currentData) => ({
       ...currentData,
       [name]: value
@@ -52,26 +47,21 @@ function EmployeeForm({ mode = "add", employee }) {
   [name]: "",
 }));
   };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const validationErrors = validateEmployee(formData);
-
   if (Object.keys(validationErrors).length > 0) {
   setErrors(validationErrors);
   return;
 }
-
     const storedData = localStorage.getItem("employees");
     const employees = storedData
       ? JSON.parse(storedData)
       : data.employees;
-
     if (mode === "edit") {
       const updatedEmployees = employees.map((item) =>
         item.id === formData.id ? formData : item
       );
-
       localStorage.setItem(
         "employees",
         JSON.stringify(updatedEmployees)
@@ -83,18 +73,15 @@ function EmployeeForm({ mode = "add", employee }) {
         salary: Number(formData.salary) || 0,
         skills: []
       };
-
       const updatedEmployees = [
         ...employees,
         newEmployee
       ];
-
       localStorage.setItem(
         "employees",
         JSON.stringify(updatedEmployees)
       );
     }
-
     navigate("/add-employee");
   };
 const isEdit = mode === "edit"; 
@@ -113,7 +100,6 @@ const isEdit = mode === "edit";
               : "Fill in the details to onboard a new employee."}
           </p>
         </div>
-
         <Button
           variant="ghost"
           size="sm"
@@ -123,15 +109,12 @@ const isEdit = mode === "edit";
           Back to Employees
         </Button>
       </div>
-
       <div className="form-section">
         <h2>Personal Information</h2>
-
         <div className="form-grid">
           {mode === "edit" && (
             <div className="form-group">
               <label>Employee ID</label>
-
               <input
                 type="text"
                 value={formData.id}
@@ -139,10 +122,8 @@ const isEdit = mode === "edit";
               />
             </div>
           )}
-
           <div className="form-group">
             <label>First Name</label>
-
             <input
               type="text"
               name="firstName"
@@ -150,15 +131,12 @@ const isEdit = mode === "edit";
               onChange={handleChange}
               placeholder="Enter first name"
             />
-
             {errors.firstName && (
               <p className="error-message">{errors.firstName}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Last Name</label>
-
             <input
               type="text"
               name="lastName"
@@ -166,15 +144,12 @@ const isEdit = mode === "edit";
               onChange={handleChange}
               placeholder="Enter last name"
             />
-
             {errors.lastName && (
               <p className="error-message">{errors.lastName}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Email</label>
-
             <input
               type="email"
               name="email"
@@ -182,15 +157,12 @@ const isEdit = mode === "edit";
               onChange={handleChange}
               placeholder="Enter email"
             />
-
             {errors.email && (
               <p className="error-message">{errors.email}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Phone</label>
-
             <input
               type="tel"
               name="phone"
@@ -198,15 +170,12 @@ const isEdit = mode === "edit";
               onChange={handleChange}
               placeholder="Enter phone number"
             />
-
             {errors.phone && (
               <p className="error-message">{errors.phone}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Gender</label>
-
             <select
               name="gender"
               value={formData.gender}
@@ -217,80 +186,65 @@ const isEdit = mode === "edit";
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
-
             {errors.gender && (
               <p className="error-message">{errors.gender}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Date of Birth</label>
-
             <input
               type="date"
               name="dob"
               value={formData.dob}
               onChange={handleChange}
             />
-
             {errors.dob && (
               <p className="error-message">{errors.dob}</p>
             )}
           </div>
         </div>
       </div>
-
       <div className="form-section">
         <h2>Job Information</h2>
-
         <div className="form-grid">
           <div className="form-group">
             <label>Department</label>
-
             <select
               name="department"
               value={formData.department}
               onChange={handleChange}
             >
               <option value="">Select Department</option>
-
               {data.departments.map((department) => (
                 <option key={department} value={department}>
                   {department}
                 </option>
               ))}
             </select>
-
             {errors.department && (
               <p className="error-message">{errors.department}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Designation</label>
-
             <select
               name="designation"
               value={formData.designation}
               onChange={handleChange}
             >
               <option value="">Select Designation</option>
-
               {data.designations.map((designation) => (
                 <option key={designation} value={designation}>
                   {designation}
                 </option>
               ))}
             </select>
-
             {errors.designation && (
               <p className="error-message">{errors.designation}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Employee Type</label>
-
             <select
               name="employeeType"
               value={formData.employeeType}
@@ -302,15 +256,12 @@ const isEdit = mode === "edit";
               <option value="Contract">Contract</option>
               <option value="Intern">Intern</option>
             </select>
-
             {errors.employeeType && (
               <p className="error-message">{errors.employeeType}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Status</label>
-
             <select
               name="status"
               value={formData.status}
@@ -320,25 +271,20 @@ const isEdit = mode === "edit";
               <option value="Inactive">Inactive</option>
             </select>
           </div>
-
           <div className="form-group">
             <label>Date of Joining</label>
-
             <input
               type="date"
               name="joinDate"
               value={formData.joinDate}
               onChange={handleChange}
             />
-
             {errors.joinDate && (
               <p className="error-message">{errors.joinDate}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>Salary</label>
-
             <input
               type="number"
               name="salary"
@@ -346,21 +292,17 @@ const isEdit = mode === "edit";
               onChange={handleChange}
               placeholder="Enter salary"
             />
-
             {errors.salary && (
               <p className="error-message">{errors.salary}</p>
             )}
           </div>
         </div>
       </div>
-
       <div className="form-section">
         <h2>Address Information</h2>
-
         <div className="form-grid">
           <div className="form-group full-width">
             <label>Address</label>
-
             <textarea
               name="address"
               value={formData.address}
@@ -368,15 +310,12 @@ const isEdit = mode === "edit";
               placeholder="Enter address"
               rows="3"
             />
-
             {errors.address && (
               <p className="error-message">{errors.address}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>City</label>
-
             <input
               type="text"
               name="city"
@@ -384,31 +323,50 @@ const isEdit = mode === "edit";
               onChange={handleChange}
               placeholder="Enter city"
             />
-
             {errors.city && (
               <p className="error-message">{errors.city}</p>
             )}
           </div>
-
           <div className="form-group">
             <label>State</label>
-
-            <input
-              type="text"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              placeholder="Enter state"
-            />
-
-            {errors.state && (
-              <p className="error-message">{errors.state}</p>
-            )}
+            <select
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            >
+              <option value="">Select State</option>
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+              <option value="Assam">Assam</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Chhattisgarh">Chhattisgarh</option>
+              <option value="Goa">Goa</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Himachal Pradesh">Himachal Pradesh</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Manipur">Manipur</option>
+              <option value="Meghalaya">Meghalaya</option>
+              <option value="Mizoram">Mizoram</option>
+              <option value="Nagaland">Nagaland</option>
+              <option value="Odisha">Odisha</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Sikkim">Sikkim</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Tripura">Tripura</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Uttarakhand">Uttarakhand</option>
+              <option value="West Bengal">West Bengal</option>
+              </select>
           </div>
-
           <div className="form-group">
             <label>ZIP Code</label>
-
             <input
               type="text"
               name="zip"
@@ -416,14 +374,12 @@ const isEdit = mode === "edit";
               onChange={handleChange}
               placeholder="Enter ZIP code"
             />
-
             {errors.zip && (
               <p className="error-message">{errors.zip}</p>
             )}
           </div>
         </div>
       </div>
-
       <div className="form-actions">
         <button
           type="button"
@@ -432,7 +388,6 @@ const isEdit = mode === "edit";
         >
           Cancel
         </button>
-
         <button type="submit" className="submit-btn">
           {mode === "edit" ? "Update Employee" : "Save Employee"}
         </button>
