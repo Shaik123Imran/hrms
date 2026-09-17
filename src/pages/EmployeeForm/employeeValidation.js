@@ -1,83 +1,106 @@
 import { employeeErrors } from "./employeeError";
 
-export const validateEmployee = (formData) => {
-  const errors = {};
+export function validateEmployee(formData) {
 
-  if (!formData.firstName.trim()) {
+  let errors = {};
+
+  if (formData.firstName.trim() === "") {
     errors.firstName = employeeErrors.firstNameRequired;
-  } else if (!/^[A-Za-z\s]+$/.test(formData.firstName)) {
-    errors.firstName = employeeErrors.invalidFirstName;
+  } else {
+    let firstNameValid = /^[A-Za-z\s]+$/.test(formData.firstName);
+
+    if (!firstNameValid) {
+      errors.firstName = employeeErrors.invalidFirstName;
+    }
   }
 
-  if (!formData.lastName.trim()) {
+  if (formData.lastName.trim() === "") {
     errors.lastName = employeeErrors.lastNameRequired;
-  } else if (!/^[A-Za-z\s]+$/.test(formData.lastName)) {
-    errors.lastName = employeeErrors.invalidLastName;
+  } else {
+    let lastNameValid = /^[A-Za-z\s]+$/.test(formData.lastName);
+
+    if (!lastNameValid) {
+      errors.lastName = employeeErrors.invalidLastName;
+    }
   }
 
-  if (!formData.email.trim()) {
+  if (formData.email.trim() === "") {
     errors.email = employeeErrors.emailRequired;
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-    errors.email = employeeErrors.invalidEmail;
+  } else {
+    let emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+
+    if (!emailValid) {
+      errors.email = employeeErrors.invalidEmail;
+    }
   }
 
-  if (!formData.phone.trim()) {
+  if (formData.phone.trim() === "") {
     errors.phone = employeeErrors.phoneRequired;
-  } else if (!/^\+91\s?[6-9]\d{9}$|^[6-9]\d{9}$/.test(formData.phone)) {
-    errors.phone = employeeErrors.invalidPhone;
+  } else {
+    let phoneValid = /^\+91\s?[6-9]\d{9}$|^[6-9]\d{9}$/.test(formData.phone);
+
+    if (!phoneValid) {
+      errors.phone = employeeErrors.invalidPhone;
+    }
   }
 
-  if (!formData.gender) {
+  if (formData.gender === "") {
     errors.gender = employeeErrors.genderRequired;
   }
 
-  if (!formData.dob) {
+  if (formData.dob === "") {
     errors.dob = employeeErrors.dobRequired;
   }
 
-  if (!formData.department) {
+  if (formData.department === "") {
     errors.department = employeeErrors.departmentRequired;
   }
 
-  if (!formData.designation) {
+  if (formData.designation === "") {
     errors.designation = employeeErrors.designationRequired;
   }
 
-  if (!formData.employeeType) {
+  if (formData.employeeType === "") {
     errors.employeeType = employeeErrors.employeeTypeRequired;
   }
 
-  if (!formData.status) {
+  if (formData.status === "") {
     errors.status = employeeErrors.statusRequired;
   }
 
-  if (!formData.joinDate) {
+  if (formData.joinDate === "") {
     errors.joinDate = employeeErrors.joinDateRequired;
   }
 
-  if (!formData.salary) {
+  if (formData.salary === "") {
     errors.salary = employeeErrors.salaryRequired;
-  } else if (Number(formData.salary) <= 0) {
-    errors.salary = employeeErrors.invalidSalary;
+  } else {
+    if (Number(formData.salary) <= 0) {
+      errors.salary = employeeErrors.invalidSalary;
+    }
   }
 
-  if (!formData.address.trim()) {
+  if (formData.address.trim() === "") {
     errors.address = employeeErrors.addressRequired;
   }
 
-  if (!formData.city.trim()) {
+  if (formData.city.trim() === "") {
     errors.city = employeeErrors.cityRequired;
   }
 
-  if (!formData.state.trim()) {
+  if (formData.state.trim() === "") {
     errors.state = employeeErrors.stateRequired;
   }
 
-  if (!formData.zip.trim()) {
+  if (formData.zip.trim() === "") {
     errors.zip = employeeErrors.zipRequired;
-  } else if (!/^\d{6}$/.test(formData.zip)) {
-    errors.zip = employeeErrors.invalidZip;
+  } else {
+    let zipValid = /^\d{6}$/.test(formData.zip);
+
+    if (!zipValid) {
+      errors.zip = employeeErrors.invalidZip;
+    }
   }
 
   return errors;
-};
+}
