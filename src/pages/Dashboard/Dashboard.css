@@ -1,1 +1,376 @@
+/* src/pages/Dashboard/Dashboard.css
+   Premium visual layer for the Dashboard page only.
+   Every selector is scoped under .dashboard-page so nothing here
+   leaks into other pages that reuse .card / .stat-card / .badge etc. */
 
+.dashboard-page {
+  position: relative;
+  padding: 1.75rem 2rem 3rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ---------- Ambient background: soft gradient orbs + grid texture ---------- */
+
+.dashboard-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: -2;
+}
+
+.dashboard-orb-1 {
+  width: 420px;
+  height: 420px;
+  top: -160px;
+  right: -100px;
+  background: radial-gradient(circle, #a78bfa 0%, transparent 70%);
+}
+
+.dashboard-orb-2 {
+  width: 380px;
+  height: 380px;
+  top: 220px;
+  left: -140px;
+  background: radial-gradient(circle, #67e8f9 0%, transparent 70%);
+  opacity: 0.25;
+}
+
+.dashboard-grid-texture {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* ---------- Header ---------- */
+
+.dashboard-page .page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.dashboard-page .page-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #4338ca 0%, #7c3aed 60%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dashboard-page .page-subtitle {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  color: #8b8aa0;
+}
+
+.dashboard-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.22rem 0.7rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #eef2ff, #f3e8ff);
+  color: #4338ca;
+  margin-left: 0.65rem;
+  vertical-align: middle;
+  border: 1px solid rgba(124, 58, 237, 0.12);
+}
+
+.dashboard-today {
+  font-size: 0.82rem;
+  color: #a1a1b5;
+  font-weight: 500;
+  padding-top: 0.35rem;
+}
+
+/* ---------- KPI tiles (glassmorphism) ---------- */
+
+.dashboard-page .grid-stats {
+  gap: 1.1rem;
+}
+
+.dashboard-page .stat-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 1.1rem;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 12px 28px -14px rgba(79, 70, 229, 0.18);
+  padding: 1.1rem 1.2rem;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: dashboard-tile-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.dashboard-page .grid-stats .stat-card:nth-child(1) { animation-delay: 0ms; }
+.dashboard-page .grid-stats .stat-card:nth-child(2) { animation-delay: 60ms; }
+.dashboard-page .grid-stats .stat-card:nth-child(3) { animation-delay: 120ms; }
+.dashboard-page .grid-stats .stat-card:nth-child(4) { animation-delay: 180ms; }
+.dashboard-page .grid-stats .stat-card:nth-child(5) { animation-delay: 240ms; }
+.dashboard-page .grid-stats .stat-card:nth-child(6) { animation-delay: 300ms; }
+
+.dashboard-page .stat-card:hover {
+  transform: translateY(-4px) scale(1.015);
+  border-color: rgba(124, 58, 237, 0.25);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 20px 36px -14px rgba(79, 70, 229, 0.32);
+}
+
+.dashboard-page .stat-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #8b8aa0;
+}
+
+.dashboard-page .stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e1b3a;
+  letter-spacing: -0.01em;
+}
+
+/* Gradient icon badges, per tone */
+.dashboard-page .stat-icon {
+  border-radius: 0.7rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.dashboard-page .stat-icon.indigo { background: linear-gradient(135deg, #818cf8, #4f46e5); color: #fff; }
+.dashboard-page .stat-icon.green  { background: linear-gradient(135deg, #6ee7b7, #10b981); color: #fff; }
+.dashboard-page .stat-icon.amber  { background: linear-gradient(135deg, #fcd34d, #d97706); color: #fff; }
+.dashboard-page .stat-icon.cyan   { background: linear-gradient(135deg, #67e8f9, #0891b2); color: #fff; }
+.dashboard-page .stat-icon.red    { background: linear-gradient(135deg, #fca5a5, #dc2626); color: #fff; }
+
+/* ---------- Content cards ---------- */
+
+.dashboard-page .card {
+  border-radius: 1.1rem;
+  border: 1px solid #eef0f6;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 16px 32px -20px rgba(15, 23, 42, 0.12);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+}
+
+.dashboard-page .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 22px 40px -18px rgba(79, 70, 229, 0.22);
+}
+
+.dashboard-page .card-title {
+  font-weight: 700;
+  color: #1e1b3a;
+  letter-spacing: -0.01em;
+}
+
+.dashboard-page .dashboard-chart-card {
+  position: relative;
+}
+
+/* ---------- Fade / slide entrance for sections ---------- */
+
+.dashboard-fade-section {
+  animation: dashboard-section-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ---------- Activity list: staggered reveal + hover ---------- */
+
+.dashboard-page .activity-list {
+  gap: 0.9rem;
+}
+
+.dashboard-page .activity-item {
+  padding: 0.4rem 0.5rem;
+  margin: -0.4rem -0.5rem;
+  border-radius: 0.6rem;
+  transition: background 0.18s ease, transform 0.18s ease;
+  animation: dashboard-row-in 0.5s ease both;
+}
+
+.dashboard-page .activity-item:nth-child(1) { animation-delay: 60ms; }
+.dashboard-page .activity-item:nth-child(2) { animation-delay: 120ms; }
+.dashboard-page .activity-item:nth-child(3) { animation-delay: 180ms; }
+.dashboard-page .activity-item:nth-child(4) { animation-delay: 240ms; }
+.dashboard-page .activity-item:nth-child(5) { animation-delay: 300ms; }
+
+.dashboard-page .activity-item:hover {
+  background: rgba(124, 58, 237, 0.05);
+  transform: translateX(2px);
+}
+
+.dashboard-page .activity-dot {
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.dashboard-page .activity-item:first-child .activity-dot {
+  animation: dashboard-pulse-dot 2s ease-in-out infinite;
+}
+
+/* ---------- Table rows: subtle hover + stagger ---------- */
+
+.dashboard-page .table tbody tr {
+  transition: background 0.15s ease;
+  animation: dashboard-row-in 0.45s ease both;
+}
+
+.dashboard-page .table tbody tr:hover {
+  background: rgba(124, 58, 237, 0.04);
+}
+
+.dashboard-page .table tbody tr:nth-child(1) { animation-delay: 30ms; }
+.dashboard-page .table tbody tr:nth-child(2) { animation-delay: 60ms; }
+.dashboard-page .table tbody tr:nth-child(3) { animation-delay: 90ms; }
+.dashboard-page .table tbody tr:nth-child(4) { animation-delay: 120ms; }
+.dashboard-page .table tbody tr:nth-child(5) { animation-delay: 150ms; }
+.dashboard-page .table tbody tr:nth-child(n+6) { animation-delay: 180ms; }
+
+/* ---------- Badges: soft glow on status ---------- */
+
+.dashboard-page .badge {
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.dashboard-page .badge-warning {
+  animation: dashboard-badge-glow 2.4s ease-in-out infinite;
+}
+
+/* ---------- Buttons / links: press + hover ---------- */
+
+.dashboard-page .btn {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.dashboard-page .btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.dashboard-page .btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.dashboard-page a.btn-ghost:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Loading / skeleton states (used before this rewrite too) ---------- */
+
+.dashboard-chart-skeleton {
+  height: 20rem;
+  border-radius: 1.1rem;
+  border: 1px solid #eef0f6;
+  background-color: #ffffff;
+  animation: dashboard-pulse 1.5s ease-in-out infinite;
+}
+
+.dashboard-list-skeleton {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dashboard-skeleton-row {
+  height: 2.1rem;
+  border-radius: 0.5rem;
+  background-color: #f4f4f8;
+  animation: dashboard-pulse 1.5s ease-in-out infinite;
+}
+
+.dashboard-empty-text {
+  font-size: 0.875rem;
+  color: #b3b2c4;
+}
+
+/* ---------- Error state ---------- */
+
+.dashboard-error {
+  border-radius: 1.1rem;
+  border: 1px solid #fed7c8;
+  background-color: #fff6f0;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #c2410c;
+}
+
+.dashboard-error-title { font-weight: 600; }
+.dashboard-error-message { margin-top: 0.25rem; }
+
+.dashboard-retry-btn {
+  margin-top: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: #ea580c;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.4rem 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.dashboard-retry-btn:hover {
+  background-color: #c2410c;
+  transform: translateY(-1px);
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes dashboard-tile-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dashboard-section-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dashboard-row-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes dashboard-pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12); }
+  50% { box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.03); }
+}
+
+@keyframes dashboard-badge-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.15); }
+  50% { box-shadow: 0 0 0 5px rgba(217, 119, 6, 0); }
+}
+
+@keyframes dashboard-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
