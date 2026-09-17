@@ -68,14 +68,22 @@ function EmployeeForm({ mode = "add", employee }) {
 
     const storedData = localStorage.getItem("employees");
 
-    const employees = storedData
-      ? JSON.parse(storedData)
-      : data.employees;
+    let employees;
+
+    if (storedData) {
+      employees = JSON.parse(storedData);
+    } else {
+      employees = data.employees;
+    }
 
     if (mode === "edit") {
-      const updatedEmployees = employees.map((item) =>
-        item.id === formData.id ? formData : item
-      );
+      const updatedEmployees = employees.map((item) => {
+        if (item.id === formData.id) {
+          return formData;
+        }
+
+        return item;
+      });
 
       localStorage.setItem(
         "employees",
@@ -86,7 +94,7 @@ function EmployeeForm({ mode = "add", employee }) {
         ...formData,
         id: `e${Date.now()}`,
         salary: Number(formData.salary) || 0,
-        skills: []
+        skills: formData.skills
       };
 
       const updatedEmployees = [
@@ -103,21 +111,34 @@ function EmployeeForm({ mode = "add", employee }) {
     navigate("/add-employee");
   };
 
-  const isEdit = mode === "edit";
+  let pageTitle;
+  let pageSubtitle;
+  let buttonText;
+
+  if (mode === "edit") {
+    pageTitle = "Edit Employee";
+    pageSubtitle = "Update the employee details below.";
+    buttonText = "Update Employee";
+  } else {
+    pageTitle = "Add Employee";
+    pageSubtitle = "Fill in the details to onboard a new employee.";
+    buttonText = "Save Employee";
+  }
 
   return (
-    <form className="employee-form" onSubmit={handleSubmit}>
+    <form
+      className="employee-form"
+      onSubmit={handleSubmit}
+    >
       <div>
         <div className="page-header">
           <div>
             <h2 className="page-title">
-              {isEdit ? "Edit Employee" : "Add Employee"}
+              {pageTitle}
             </h2>
 
             <p className="page-subtitle">
-              {isEdit
-                ? "Update the employee details below."
-                : "Fill in the details to onboard a new employee."}
+              {pageSubtitle}
             </p>
           </div>
 
@@ -135,7 +156,8 @@ function EmployeeForm({ mode = "add", employee }) {
           <h2>Personal Information</h2>
 
           <div className="form-grid">
-            {isEdit && (
+
+            {mode === "edit" && (
               <div className="form-group">
                 <label>Employee ID</label>
 
@@ -256,6 +278,7 @@ function EmployeeForm({ mode = "add", employee }) {
                 </p>
               )}
             </div>
+
           </div>
         </div>
 
@@ -263,6 +286,7 @@ function EmployeeForm({ mode = "add", employee }) {
           <h2>Job Information</h2>
 
           <div className="form-grid">
+
             <div className="form-group">
               <label>Department</label>
 
@@ -271,7 +295,9 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.department}
                 onChange={handleChange}
               >
-                <option value="">Select Department</option>
+                <option value="">
+                  Select Department
+                </option>
 
                 {data.departments.map((department) => (
                   <option
@@ -298,7 +324,9 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.designation}
                 onChange={handleChange}
               >
-                <option value="">Select Designation</option>
+                <option value="">
+                  Select Designation
+                </option>
 
                 {data.designations.map((designation) => (
                   <option
@@ -325,11 +353,21 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.employeeType}
                 onChange={handleChange}
               >
-                <option value="">Select Employee Type</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Contract">Contract</option>
-                <option value="Intern">Intern</option>
+                <option value="">
+                  Select Employee Type
+                </option>
+                <option value="Full-time">
+                  Full-time
+                </option>
+                <option value="Part-time">
+                  Part-time
+                </option>
+                <option value="Contract">
+                  Contract
+                </option>
+                <option value="Intern">
+                  Intern
+                </option>
               </select>
 
               {errors.employeeType && (
@@ -347,8 +385,12 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.status}
                 onChange={handleChange}
               >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
+                <option value="Active">
+                  Active
+                </option>
+                <option value="Inactive">
+                  Inactive
+                </option>
               </select>
             </div>
 
@@ -386,6 +428,7 @@ function EmployeeForm({ mode = "add", employee }) {
                 </p>
               )}
             </div>
+
           </div>
         </div>
 
@@ -393,6 +436,7 @@ function EmployeeForm({ mode = "add", employee }) {
           <h2>Address Information</h2>
 
           <div className="form-grid">
+
             <div className="form-group full-width">
               <label>Address</label>
 
@@ -437,50 +481,118 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.state}
                 onChange={handleChange}
               >
-                <option value="">Select State</option>
+                <option value="">
+                  Select State
+                </option>
+
                 <option value="Andhra Pradesh">
                   Andhra Pradesh
                 </option>
+
                 <option value="Arunachal Pradesh">
                   Arunachal Pradesh
                 </option>
-                <option value="Assam">Assam</option>
-                <option value="Bihar">Bihar</option>
+
+                <option value="Assam">
+                  Assam
+                </option>
+
+                <option value="Bihar">
+                  Bihar
+                </option>
+
                 <option value="Chhattisgarh">
                   Chhattisgarh
                 </option>
-                <option value="Goa">Goa</option>
-                <option value="Gujarat">Gujarat</option>
-                <option value="Haryana">Haryana</option>
+
+                <option value="Goa">
+                  Goa
+                </option>
+
+                <option value="Gujarat">
+                  Gujarat
+                </option>
+
+                <option value="Haryana">
+                  Haryana
+                </option>
+
                 <option value="Himachal Pradesh">
                   Himachal Pradesh
                 </option>
-                <option value="Jharkhand">Jharkhand</option>
-                <option value="Karnataka">Karnataka</option>
-                <option value="Kerala">Kerala</option>
+
+                <option value="Jharkhand">
+                  Jharkhand
+                </option>
+
+                <option value="Karnataka">
+                  Karnataka
+                </option>
+
+                <option value="Kerala">
+                  Kerala
+                </option>
+
                 <option value="Madhya Pradesh">
                   Madhya Pradesh
                 </option>
+
                 <option value="Maharashtra">
                   Maharashtra
                 </option>
-                <option value="Manipur">Manipur</option>
-                <option value="Meghalaya">Meghalaya</option>
-                <option value="Mizoram">Mizoram</option>
-                <option value="Nagaland">Nagaland</option>
-                <option value="Odisha">Odisha</option>
-                <option value="Punjab">Punjab</option>
-                <option value="Rajasthan">Rajasthan</option>
-                <option value="Sikkim">Sikkim</option>
-                <option value="Tamil Nadu">Tamil Nadu</option>
-                <option value="Telangana">Telangana</option>
-                <option value="Tripura">Tripura</option>
+
+                <option value="Manipur">
+                  Manipur
+                </option>
+
+                <option value="Meghalaya">
+                  Meghalaya
+                </option>
+
+                <option value="Mizoram">
+                  Mizoram
+                </option>
+
+                <option value="Nagaland">
+                  Nagaland
+                </option>
+
+                <option value="Odisha">
+                  Odisha
+                </option>
+
+                <option value="Punjab">
+                  Punjab
+                </option>
+
+                <option value="Rajasthan">
+                  Rajasthan
+                </option>
+
+                <option value="Sikkim">
+                  Sikkim
+                </option>
+
+                <option value="Tamil Nadu">
+                  Tamil Nadu
+                </option>
+
+                <option value="Telangana">
+                  Telangana
+                </option>
+
+                <option value="Tripura">
+                  Tripura
+                </option>
+
                 <option value="Uttar Pradesh">
                   Uttar Pradesh
                 </option>
+
                 <option value="Uttarakhand">
                   Uttarakhand
                 </option>
+
                 <option value="West Bengal">
                   West Bengal
                 </option>
@@ -510,6 +622,7 @@ function EmployeeForm({ mode = "add", employee }) {
                 </p>
               )}
             </div>
+
           </div>
         </div>
 
@@ -522,28 +635,21 @@ function EmployeeForm({ mode = "add", employee }) {
 
               <textarea
                 name="skills"
-                value={
-                  Array.isArray(formData.skills)
-                    ? formData.skills.join(", ")
-                    : formData.skills
-                }
-                onChange={(event) =>
-                  setFormData((currentData) => ({
-                    ...currentData,
-                    skills: event.target.value
-                      .split(",")
-                      .map((skill) => skill.trim())
-                      .filter(Boolean)
-                  }))
-                }
+                value={formData.skills.join(", ")}
+                onChange={(event) => {
+                  setFormData({
+                    ...formData,
+                    skills: event.target.value.split(",")
+                  });
+                }}
                 placeholder="Enter skills separated by commas"
-                rows="3"
               />
             </div>
           </div>
         </div>
 
         <div className="form-actions">
+
           <button
             type="button"
             className="cancel-btn"
@@ -556,9 +662,11 @@ function EmployeeForm({ mode = "add", employee }) {
             type="submit"
             className="submit-btn"
           >
-            {isEdit ? "Update Employee" : "Save Employee"}
+            {buttonText}
           </button>
+
         </div>
+
       </div>
     </form>
   );
