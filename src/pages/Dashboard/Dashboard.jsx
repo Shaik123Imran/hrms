@@ -33,7 +33,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import Card from '../../components/Card.jsx';
 import StatCard from '../../components/StatCard.jsx';
 
-const PIE_COLORS = ['#4f46e5', '#7c3aed', '#0891b2', '#16a34a', '#d97706', '#dc2626'];
+const PIE_COLORS = ['#1e293b', '#0d9488', '#d97706', '#15803d', '#64748b', '#b91c1c'];
 const ATTENDANCE_BAR_COLORS = {
   Present: '#16a34a',
   WFH: '#0891b2',
@@ -118,12 +118,12 @@ function OrgDashboard({ data, user }) {
               <AreaChart data={attendanceTrend}>
                 <defs>
                   <linearGradient id="attendanceFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#6d28d9" stopOpacity={0.32} />
-                    <stop offset="100%" stopColor="#6d28d9" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#1e293b" stopOpacity={0.32} />
+                    <stop offset="100%" stopColor="#1e293b" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="attendanceStroke" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#4f46e5" />
-                    <stop offset="100%" stopColor="#7c3aed" />
+                    <stop offset="0%" stopColor="#334155" />
+                    <stop offset="100%" stopColor="#0f172a" />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#eef0f6" />
@@ -138,8 +138,8 @@ function OrgDashboard({ data, user }) {
                   stroke="url(#attendanceStroke)"
                   strokeWidth={3}
                   fill="url(#attendanceFill)"
-                  dot={{ fill: '#4f46e5', r: 4, strokeWidth: 0 }}
-                  activeDot={{ r: 7, fill: '#7c3aed' }}
+                  dot={{ fill: '#1e293b', r: 4, strokeWidth: 0 }}
+                  activeDot={{ r: 7, fill: '#334155' }}
                   animationDuration={1100}
                   animationEasing="ease-out"
                 />
@@ -154,7 +154,7 @@ function OrgDashboard({ data, user }) {
               <PieChart>
                 <defs>
                   <filter id="donutGlow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#4f46e5" floodOpacity="0.18" />
+                    <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#1e293b" floodOpacity="0.18" />
                   </filter>
                 </defs>
                 <Pie
@@ -304,7 +304,7 @@ function SelfDashboard({ data, user }) {
                 <PieChart>
                   <defs>
                     <filter id="leaveDonutGlow" x="-30%" y="-30%" width="160%" height="160%">
-                      <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#4f46e5" floodOpacity="0.18" />
+                      <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#1e293b" floodOpacity="0.18" />
                     </filter>
                   </defs>
                   <Pie

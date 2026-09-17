@@ -26,7 +26,7 @@
   height: 420px;
   top: -160px;
   right: -100px;
-  background: radial-gradient(circle, #a78bfa 0%, transparent 70%);
+  background: radial-gradient(circle, #475569 0%, transparent 70%);
 }
 
 .dashboard-orb-2 {
@@ -34,7 +34,7 @@
   height: 380px;
   top: 220px;
   left: -140px;
-  background: radial-gradient(circle, #67e8f9 0%, transparent 70%);
+  background: radial-gradient(circle, #94a3b8 0%, transparent 70%);
   opacity: 0.25;
 }
 
@@ -65,7 +65,7 @@
   font-size: 1.65rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #4338ca 0%, #7c3aed 60%, #a78bfa 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #475569 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -87,10 +87,10 @@
   padding: 0.22rem 0.7rem;
   border-radius: 9999px;
   background: linear-gradient(135deg, #eef2ff, #f3e8ff);
-  color: #4338ca;
+  color: #0f172a;
   margin-left: 0.65rem;
   vertical-align: middle;
-  border: 1px solid rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(30, 41, 59, 0.12);
 }
 
 .dashboard-today {
@@ -115,7 +115,7 @@
   border-radius: 1.1rem;
   box-shadow:
     0 1px 2px rgba(15, 23, 42, 0.04),
-    0 12px 28px -14px rgba(79, 70, 229, 0.18);
+    0 12px 28px -14px rgba(15, 23, 42, 0.18);
   padding: 1.1rem 1.2rem;
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
   animation: dashboard-tile-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -130,10 +130,10 @@
 
 .dashboard-page .stat-card:hover {
   transform: translateY(-4px) scale(1.015);
-  border-color: rgba(124, 58, 237, 0.25);
+  border-color: rgba(30, 41, 59, 0.25);
   box-shadow:
     0 1px 2px rgba(15, 23, 42, 0.04),
-    0 20px 36px -14px rgba(79, 70, 229, 0.32);
+    0 20px 36px -14px rgba(15, 23, 42, 0.32);
 }
 
 .dashboard-page .stat-label {
@@ -155,10 +155,10 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-.dashboard-page .stat-icon.indigo { background: linear-gradient(135deg, #818cf8, #4f46e5); color: #fff; }
+.dashboard-page .stat-icon.indigo { background: linear-gradient(135deg, #475569, #1e293b); color: #fff; }
 .dashboard-page .stat-icon.green  { background: linear-gradient(135deg, #6ee7b7, #10b981); color: #fff; }
 .dashboard-page .stat-icon.amber  { background: linear-gradient(135deg, #fcd34d, #d97706); color: #fff; }
-.dashboard-page .stat-icon.cyan   { background: linear-gradient(135deg, #67e8f9, #0891b2); color: #fff; }
+.dashboard-page .stat-icon.cyan   { background: linear-gradient(135deg, #94a3b8, #0891b2); color: #fff; }
 .dashboard-page .stat-icon.red    { background: linear-gradient(135deg, #fca5a5, #dc2626); color: #fff; }
 
 /* ---------- Content cards ---------- */
@@ -172,7 +172,7 @@
 
 .dashboard-page .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 22px 40px -18px rgba(79, 70, 229, 0.22);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 22px 40px -18px rgba(15, 23, 42, 0.22);
 }
 
 .dashboard-page .card-title {
@@ -212,12 +212,12 @@
 .dashboard-page .activity-item:nth-child(5) { animation-delay: 300ms; }
 
 .dashboard-page .activity-item:hover {
-  background: rgba(124, 58, 237, 0.05);
+  background: rgba(30, 41, 59, 0.05);
   transform: translateX(2px);
 }
 
 .dashboard-page .activity-dot {
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.1);
 }
 
 .dashboard-page .activity-item:first-child .activity-dot {
@@ -232,7 +232,7 @@
 }
 
 .dashboard-page .table tbody tr:hover {
-  background: rgba(124, 58, 237, 0.04);
+  background: rgba(30, 41, 59, 0.04);
 }
 
 .dashboard-page .table tbody tr:nth-child(1) { animation-delay: 30ms; }
@@ -351,8 +351,8 @@
 }
 
 @keyframes dashboard-pulse-dot {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12); }
-  50% { box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.03); }
+  0%, 100% { box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.12); }
+  50% { box-shadow: 0 0 0 8px rgba(15, 23, 42, 0.03); }
 }
 
 @keyframes dashboard-badge-glow {
