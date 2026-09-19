@@ -194,7 +194,3 @@ export function readSession() {
 export function logout() {
   if (isBrowser) localStorage.removeItem(SESSION_KEY);
 }
-
-export function resetData() {
-  if (isBrowser) localStorage.removeItem(STORAGE_KEY);
-}

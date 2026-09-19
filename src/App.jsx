@@ -24,10 +24,8 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/employees" element={<EmployeeList />} />
               <Route path="/employees/new" element={<EmployeeForm />} />
-              <Route path="/add-employee" element={<EmployeeForm />} />
               <Route path="/employees/:id" element={<EmployeeProfile />} />
               <Route path="/employees/:id/edit" element={<EmployeeForm />} />
-              <Route path="/edit-employee/:employeeId" element={<EmployeeForm />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/leaves" element={<LeaveManagement />} />
             </Route>
