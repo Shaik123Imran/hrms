@@ -6,8 +6,9 @@
   },
   "users": [
     { "id": "u1", "name": "Sneha Reddy", "email": "admin@hrms.com", "password": "admin123", "role": "Admin" },
-    { "id": "u2", "name": "Rahul Verma", "email": "hr@hrms.com", "password": "hr123", "role": "HR Manager" },
-    {"id": "u3","name": "Arjun Kumar","email": "employee@hrms.com","password": "employee123","role": "Employee"}
+    { "id": "u2", "name": "Rahul Verma", "email": "hr@hrms.com", "password": "hr123", "role": "HR" },
+    {"id": "u3","name": "Arjun Kumar","email": "employee@hrms.com","password": "employee123","role": "Employee"},
+    {"id": "u4","name": "Samantha","email": "manager@hrms.com","password": "manager123","role": "Manager"}
   ],
   "departments": ["HR", "IT", "Non IT"],
   "designations": [
