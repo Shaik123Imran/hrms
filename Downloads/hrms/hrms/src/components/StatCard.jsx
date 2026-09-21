@@ -1,4 +1,6 @@
+
 import { useEffect, useState } from 'react';
+
 
 export default function StatCard({ icon: Icon, iconTone = 'indigo', label, value, suffix = '', delayMs = 0 }) {
   const isNumeric = typeof value === 'number';

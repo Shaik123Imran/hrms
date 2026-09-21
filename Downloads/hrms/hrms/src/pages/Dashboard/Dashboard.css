@@ -17,6 +17,7 @@
 }
 
 
+
 .dashboard-orb {
   position: absolute;
   border-radius: 9999px;
@@ -68,6 +69,7 @@
 }
 
 
+
 .dashboard-particles {
   position: absolute;
   inset: 0;
@@ -105,6 +107,7 @@
 .dashboard-particle-14 { left: 96%; width: 5px;  height: 5px;  animation-duration: 18s; animation-delay: 6.5s; }
 .dashboard-particle-15 { left: 55%; width: 3px;  height: 3px;  animation-duration: 14s; animation-delay: 9s; }
 .dashboard-particle-16 { left: 8%;  width: 3px;  height: 3px;  animation-duration: 13s; animation-delay: 10s; }
+
 
 
 .dashboard-page .page-header {
@@ -160,6 +163,7 @@
 }
 
 
+
 .dashboard-page .grid-stats {
   gap: 1.1rem;
 }
@@ -212,6 +216,7 @@
   font-variant-numeric: tabular-nums;
 }
 
+
 .dashboard-page .stat-icon {
   border-radius: 0.7rem;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
@@ -222,6 +227,7 @@
 .dashboard-page .stat-icon.amber  { background: linear-gradient(135deg, #fcd34d, #d97706); color: #fff; }
 .dashboard-page .stat-icon.cyan   { background: linear-gradient(135deg, #94a3b8, #0891b2); color: #fff; }
 .dashboard-page .stat-icon.red    { background: linear-gradient(135deg, #fca5a5, #dc2626); color: #fff; }
+
 
 
 .dashboard-page .card {
@@ -261,9 +267,11 @@
 }
 
 
+
 .dashboard-fade-section {
   animation: dashboard-section-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
 
 
 .dashboard-page .activity-list {
@@ -298,6 +306,7 @@
 }
 
 
+
 .dashboard-page .table tbody tr {
   transition: background 0.15s ease;
   animation: dashboard-row-in 0.45s ease both;
@@ -315,6 +324,7 @@
 .dashboard-page .table tbody tr:nth-child(n+6) { animation-delay: 180ms; }
 
 
+
 .dashboard-page .badge {
   font-weight: 600;
   border: 1px solid transparent;
@@ -323,6 +333,7 @@
 .dashboard-page .badge-warning {
   animation: dashboard-badge-glow 2.4s ease-in-out infinite;
 }
+
 
 
 .dashboard-page .btn {
@@ -341,6 +352,7 @@
 .dashboard-page a.btn-ghost:hover {
   text-decoration: underline;
 }
+
 
 
 .dashboard-chart-skeleton {
@@ -369,6 +381,7 @@
   font-size: 0.875rem;
   color: #b3b2c4;
 }
+
 
 
 .dashboard-error {
@@ -400,6 +413,7 @@
   background-color: #c2410c;
   transform: translateY(-1px);
 }
+
 
 
 @keyframes dashboard-tile-in {
@@ -456,6 +470,7 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
 
 
 @media (prefers-reduced-motion: reduce) {
