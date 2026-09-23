@@ -32,7 +32,7 @@ import {
 import './Dashboard.css';
 import * as dataService from '../../services/dataService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
-import Card from '../../components/Card.jsx';
+import Card from '../../components/ui/Card.jsx';
 import StatCard from '../../components/StatCard.jsx';
 
 const PIE_COLORS = ['#1e293b', '#0d9488', '#d97706', '#15803d', '#64748b', '#b91c1c'];
