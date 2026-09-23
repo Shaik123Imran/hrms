@@ -8,6 +8,7 @@ function App() {
       <Routes>
         <Route path="/add-employee" element={<AddEmployee />} />
         <Route path="/edit-employee/:employeeId" element={<EditEmployee />} />
+
       </Routes>
     </BrowserRouter>
   );

@@ -433,12 +433,12 @@ function EmployeeForm({ mode = "add", employee }) {
         </div>
 
         <div className="form-section">
-          <h2>Address Information</h2>
+          <h2>Address</h2>
 
           <div className="form-grid">
 
             <div className="form-group full-width">
-              <label>Address</label>
+              
 
               <textarea
                 name="address"
@@ -631,11 +631,10 @@ function EmployeeForm({ mode = "add", employee }) {
 
           <div className="form-grid">
             <div className="form-group full-width">
-              <label>Skills</label>
 
               <textarea
                 name="skills"
-                value={formData.skills.join(", ")}
+                value={formData.skills}
                 onChange={(event) => {
                   setFormData({
                     ...formData,
@@ -646,6 +645,7 @@ function EmployeeForm({ mode = "add", employee }) {
               />
             </div>
           </div>
+
         </div>
 
         <div className="form-actions">

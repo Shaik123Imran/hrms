@@ -2,37 +2,43 @@
   width: 100%;
   max-width: 1000px;
   margin: 30px auto;
-  padding: 30px;
-  background: #ffffff;
-  color: #222222;
-  border-radius: 10px;
+  padding: var(--page-padding);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-xl);
   box-sizing: border-box;
 }
 
-.employee-form h1 {
-  margin: 0 0 25px;
-  color: #222222;
-  font-size: 28px;
+.employee-form .page-header {
+  margin-bottom: var(--space-6);
+}
+
+.employee-form .page-title {
+  margin-bottom: var(--space-2);
+}
+
+.employee-form .page-subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
 }
 
 .form-section {
-  margin-bottom: 25px;
-  padding: 20px;
-  border: 1px solid #dddddd;
-  border-radius: 8px;
+  margin-bottom: var(--section-gap);
+  padding: var(--card-padding);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   box-sizing: border-box;
 }
 
 .form-section h2 {
-  margin: 0 0 20px;
-  color: #333333;
-  font-size: 20px;
+  margin-bottom: var(--space-5);
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: var(--form-gap);
 }
 
 .form-group {
@@ -42,37 +48,34 @@
 }
 
 .form-group label {
-  margin-bottom: 7px;
-  font-weight: 600;
-  color: #333333;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 5px;
-  font-size: 14px;
-  color: #222222;
-  background: #ffffff;
+  min-height: var(--input-height-md);
+  padding: 0 var(--input-padding-horizontal);
+  border: var(--input-border-width) solid var(--input-border);
+  border-radius: var(--input-radius);
+  background-color: var(--input-background);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
   box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #4f46e5;
+.form-group textarea {
+  height: 60px;
+  padding: var(--space-2) var(--input-padding-horizontal);
 }
 
 .form-group input:read-only {
-  background: #f3f3f3;
-}
-
-.form-group textarea {
-  resize: vertical;
+  background-color: var(--disabled-background);
+  color: var(--disabled-text);
 }
 
 .full-width {
@@ -82,53 +85,45 @@
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 15px;
-  margin-top: 20px;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
 }
 
 .cancel-btn,
 .submit-btn {
-  padding: 10px 20px;
+  height: var(--button-height-md);
+  padding: 0 var(--button-padding-horizontal);
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
+  border-radius: var(--button-radius);
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
 }
 
 .cancel-btn {
-  background: #dddddd;
-  color: #222222;
-}
-
-.submit-btn {
-  background: #4f46e5;
-  color: #ffffff;
+  background-color: var(--color-secondary-light);
+  color: var(--color-text-primary);
 }
 
 .cancel-btn:hover {
-  background: #cccccc;
+  background-color: var(--color-border-dark);
+}
+
+.submit-btn {
+  background-color: var(--color-primary);
+  color: var(--color-text-white);
 }
 
 .submit-btn:hover {
-  background: #3730a3;
+  background-color: var(--color-primary-hover);
 }
 
-.employee-not-found {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 30px;
-}
 .error-message {
-
-  color: #dc2626;
-
-  font-size: 13px;
-
-  margin-top: 5px;
-
-  font-weight: 500;
-
+  margin-top: var(--space-2);
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 }
+
 @media (max-width: 700px) {
   .form-grid {
     grid-template-columns: 1fr;
@@ -140,11 +135,11 @@
 
   .employee-form {
     margin: 10px auto;
-    padding: 15px;
+    padding: var(--page-padding-mobile);
   }
 
   .form-section {
-    padding: 15px;
+    padding: var(--space-4);
   }
 
   .form-actions {
