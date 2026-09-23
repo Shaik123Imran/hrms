@@ -1,7 +1,6 @@
 :root {
 
-     /* BRAND COLORS */
-
+  /* BRAND COLORS */
   --color-primary: #2563eb;
   --color-primary-hover: #1d4ed8;
   --color-primary-active: #1e40af;
@@ -27,43 +26,50 @@
   --color-text-disabled: #cbd5e1;
   --color-text-white: #ffffff;
 
+  /* BORDER COLORS */
+
   --color-border: #e2e8f0;
   --color-border-light: #f1f5f9;
   --color-border-dark: #cbd5e1;
   --color-border-focus: var(--color-primary);
 
-  /* Success */
+  /* SUCCESS */
+
   --color-success: #16a34a;
   --color-success-hover: #15803d;
   --color-success-light: #dcfce7;
   --color-success-border: #bbf7d0;
 
-  /* Warning */
+  /* WARNING */
+
   --color-warning: #f59e0b;
   --color-warning-hover: #d97706;
   --color-warning-light: #fef3c7;
   --color-warning-border: #fde68a;
 
-  /* Error / Danger */
+  /* ERROR / DANGER */
+
   --color-error: #dc2626;
   --color-error-hover: #b91c1c;
   --color-error-light: #fee2e2;
   --color-error-border: #fecaca;
 
-  /* Information */
+  /* INFORMATION */
+
   --color-info: #0284c7;
   --color-info-hover: #0369a1;
   --color-info-light: #e0f2fe;
   --color-info-border: #bae6fd;
 
+  /* EMPLOYEE */
 
-  /* Employee */
   --employee-active: #16a34a;
   --employee-inactive: #64748b;
   --employee-onboarding: #2563eb;
   --employee-terminated: #dc2626;
 
-  /* Attendance */
+  /* ATTENDANCE */
+
   --attendance-present: #16a34a;
   --attendance-absent: #dc2626;
   --attendance-late: #f59e0b;
@@ -71,28 +77,16 @@
   --attendance-leave: #8b5cf6;
   --attendance-holiday: #0284c7;
 
-  /* Leave */
+  /* LEAVE */
+
   --leave-approved: #16a34a;
   --leave-pending: #f59e0b;
   --leave-rejected: #dc2626;
   --leave-cancelled: #64748b;
 
-  /* Approval */
-  --approval-approved: #16a34a;
-  --approval-pending: #f59e0b;
-  --approval-rejected: #dc2626;
-
-  /* Payroll */
-  --payroll-paid: #16a34a;
-  --payroll-processing: #f59e0b;
-  --payroll-pending: #64748b;
-  --payroll-failed: #dc2626;
-
   /* TYPOGRAPHY */
 
   --font-family: "Inter", sans-serif;
-
-  /* Font sizes */
   --font-size-xs: 12px;
   --font-size-sm: 14px;
   --font-size-md: 16px;
@@ -102,29 +96,24 @@
   --font-size-3xl: 30px;
   --font-size-4xl: 36px;
 
-  /* Font weights */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-
-  /* Line heights */
   --line-height-tight: 1.25;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
 
-/* HEADING STYLES */
+  /* HEADING STYLES */
 
   --heading-page-size: 24px;
   --heading-page-weight: 600;
-
   --heading-section-size: 18px;
   --heading-section-weight: 600;
-
   --heading-card-size: 16px;
   --heading-card-weight: 600;
 
-/* SPACING */
+  /* SPACING */
 
   --space-1: 4px;
   --space-2: 8px;
@@ -137,13 +126,10 @@
   --space-12: 48px;
   --space-16: 64px;
 
-/* COMMON COMPONENT SPACING */
-
   --page-padding: 24px;
   --section-gap: 24px;
   --card-padding: 20px;
   --form-gap: 16px;
-  --table-cell-padding: 12px 16px;
 
   /* BORDER RADIUS */
 
@@ -155,189 +141,122 @@
   --radius-2xl: 16px;
   --radius-full: 9999px;
 
-/* SHADOWS */
+  /* SHADOWS */
 
   --shadow-none: none;
-
   --shadow-sm:
     0 1px 2px rgba(0, 0, 0, 0.05);
-
   --shadow-md:
     0 2px 8px rgba(0, 0, 0, 0.08);
-
   --shadow-lg:
     0 8px 20px rgba(0, 0, 0, 0.10);
-
   --shadow-xl:
     0 16px 32px rgba(0, 0, 0, 0.12);
 
-    /* INPUT / FORM CONTROLS */
+  /* INPUT / FORM CONTROLS */
 
   --input-height-sm: 32px;
   --input-height-md: 40px;
   --input-height-lg: 48px;
-
   --input-padding-horizontal: 12px;
-
   --input-border-width: 1px;
-
   --input-radius: var(--radius-lg);
-
   --input-background: var(--color-surface);
   --input-border: var(--color-border);
-
   --input-focus-border: var(--color-primary);
   --input-focus-ring: rgba(37, 99, 235, 0.15);
-
   --input-error-border: var(--color-error);
   --input-disabled-background: var(--color-surface-secondary);
 
-/* BUTTONS */
+  /* BUTTONS */
 
   --button-height-sm: 32px;
   --button-height-md: 40px;
   --button-height-lg: 48px;
-
   --button-padding-horizontal: 16px;
-
   --button-radius: var(--radius-lg);
-
   --button-font-size: var(--font-size-sm);
   --button-font-weight: var(--font-weight-medium);
 
-/* CARDS */
+  /* CARDS */
 
   --card-background: var(--color-surface);
   --card-border: var(--color-border);
   --card-radius: var(--radius-xl);
-  --card-padding: var(--card-padding);
   --card-shadow: var(--shadow-sm);
 
-/* TABLE */
+  /* TABLE */
 
   --table-background: var(--color-surface);
   --table-header-background: var(--color-surface-secondary);
-
   --table-header-text: var(--color-text-secondary);
   --table-body-text: var(--color-text-primary);
-
   --table-border: var(--color-border);
-
   --table-row-hover: var(--color-surface-hover);
   --table-row-selected: var(--color-surface-selected);
-
   --table-cell-padding: 12px 16px;
 
- /* BADGES */
+  /* BADGES */
 
   --badge-radius: var(--radius-full);
   --badge-padding: 4px 10px;
-
   --badge-font-size: var(--font-size-xs);
   --badge-font-weight: var(--font-weight-medium);
 
-/* SIDEBAR */
+  /* SIDEBAR */
 
   --sidebar-width: 240px;
   --sidebar-collapsed-width: 72px;
-
   --sidebar-background: var(--color-surface);
-
   --sidebar-border: var(--color-border);
-
   --sidebar-item-height: 40px;
   --sidebar-item-radius: var(--radius-lg);
-
   --sidebar-item-padding: 10px 12px;
-
   --sidebar-text: var(--color-text-secondary);
   --sidebar-text-active: var(--color-primary);
-
   --sidebar-item-hover: var(--color-surface-secondary);
   --sidebar-item-active: var(--color-primary-light);
 
   /* TOPBAR */
 
   --topbar-height: 64px;
-
   --topbar-background: var(--color-surface);
-
   --topbar-border: var(--color-border);
-
   --topbar-padding: 0 24px;
- /* MODAL */
+
+  /* MODAL */
 
   --modal-background: var(--color-surface);
-
   --modal-small-width: 400px;
   --modal-medium-width: 600px;
   --modal-large-width: 800px;
-
   --modal-radius: var(--radius-xl);
-
   --modal-padding: 24px;
-
   --modal-shadow: var(--shadow-xl);
-/* DROPDOWN */
+
+  /* DROPDOWN */
 
   --dropdown-background: var(--color-surface);
   --dropdown-border: var(--color-border);
-
   --dropdown-radius: var(--radius-lg);
-
   --dropdown-shadow: var(--shadow-lg);
-
   --dropdown-item-height: 40px;
   --dropdown-item-padding: 8px 12px;
-
   --dropdown-item-hover: var(--color-surface-secondary);
-/* AVATAR */
 
-  --avatar-xs: 24px;
-  --avatar-sm: 32px;
-  --avatar-md: 40px;
-  --avatar-lg: 48px;
-  --avatar-xl: 64px;
-
-  --avatar-radius: var(--radius-full);
-/* ICON SIZES */
+  /* ICON SIZES */
 
   --icon-xs: 14px;
   --icon-sm: 16px;
   --icon-md: 20px;
   --icon-lg: 24px;
   --icon-xl: 32px;
-/* SEARCH */
 
-  --search-height: 40px;
-  --search-width: 280px;
-
-  --search-background: var(--color-surface);
-  --search-border: var(--color-border);
-
-  --search-radius: var(--radius-lg);
-/* NOTIFICATIONS */
-
-  --notification-unread: var(--color-primary-light);
-
-  --notification-success: var(--color-success-light);
-  --notification-warning: var(--color-warning-light);
-  --notification-error: var(--color-error-light);
-
-
-/* PAGINATION */
-
-  --pagination-size: 36px;
-  --pagination-radius: var(--radius-md);
-
-  --pagination-background: var(--color-surface);
-  --pagination-active: var(--color-primary);
-  --pagination-hover: var(--color-surface-secondary);
-
+  /* OVERLAY */
 
   --overlay-color: rgba(15, 23, 42, 0.5);
 
-/* Z-INDEX */
+  /* Z-INDEX */
 
   --z-base: 1;
   --z-dropdown: 100;
@@ -349,26 +268,18 @@
   --z-tooltip: 700;
   --z-toast: 800;
 
-/* TRANSITIONS */
+  /* TRANSITIONS */
 
   --transition-fast: 150ms ease;
   --transition-normal: 200ms ease;
   --transition-slow: 300ms ease;
 
-     /* Use these values when creating responsive layouts */
-
-  --breakpoint-mobile: 640px;
-  --breakpoint-tablet: 768px;
-  --breakpoint-laptop: 1024px;
-  --breakpoint-desktop: 1280px;
-  --breakpoint-large: 1536px;
-
-/* FOCUS */
+  /* FOCUS */
 
   --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
   --focus-color: var(--color-primary);
- 
+
   /* DISABLED STATE */
 
   --disabled-opacity: 0.6;
@@ -376,37 +287,20 @@
   --disabled-text: var(--color-text-disabled);
   --disabled-border: var(--color-border);
 
-
-  /* HRMS Dashboard */
+  /* HRMS DASHBOARD */
 
   --dashboard-card-radius: var(--radius-xl);
   --dashboard-card-padding: 20px;
   --dashboard-grid-gap: 16px;
-
   --stat-number-size: 28px;
   --stat-label-size: var(--font-size-sm);
 
-
-  --document-verified: var(--color-success);
-  --document-pending: var(--color-warning);
-  --document-rejected: var(--color-error);
-  --document-expired: var(--color-error);
-
-     /* For dashboard reports and analytics */
-
-  --chart-primary: #2563eb;
-  --chart-secondary: #8b5cf6;
-  --chart-success: #16a34a;
-  --chart-warning: #f59e0b;
-  --chart-danger: #dc2626;
-  --chart-info: #0284c7;
+  /* LAYOUT */
 
   --page-padding-mobile: 16px;
   --page-padding-tablet: 20px;
   --page-padding-desktop: 24px;
-
   --content-max-width: 1440px;
-  
   --skeleton-background: #e2e8f0;
   --loading-opacity: 0.6;
 }
