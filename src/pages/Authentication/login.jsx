@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
-import "./login.css";
+
+import Card from "../../components/ui/Card.jsx";
+import Button from "../../components/ui/Button.jsx";
+import Input from "../../components/ui/Input.jsx";
+
 import data from "../../data/data.json";
 
 function Login() {
@@ -41,7 +45,7 @@ function Login() {
     if (user) {
       setError("");
 
-      
+      // Store user in AuthContext
       login(user);
 
       // Store user in cookie
@@ -49,9 +53,7 @@ function Login() {
         JSON.stringify(user)
       )}; max-age=3600; path=/`;
 
-      alert(`${user.role} login successful`);
-
-    
+      // Go to the common dashboard
       navigate("/dashboard");
 
       return;
@@ -61,61 +63,68 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <h1>HRMS Login</h1>
-        <p>Human Resource Management System</p>
+    <div className="page-container">
+      <div
+        style={{
+          minHeight: "80vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Card
+          title="HRMS Login"
+          subtitle="Human Resource Management System"
+          className="w-full max-w-md"
+        >
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4">
 
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Username</label>
-            <br />
-            <input
-              type="text"
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
+              <Input
+                label="Email"
+                type="email"
+                placeholder="Enter email"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
 
-          <br />
+              <Input
+                label="Password"
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
 
-          <div>
-            <label>Password</label>
-            <br />
+              <div>
+                <label className="field-label">Role</label>
 
-            <input
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+                <select
+                  className="field-input"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <option value="">Select Role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="HR">HR</option>
+                  <option value="Employee">Employee</option>
+                  <option value="Manager">Manager</option>
+                </select>
+              </div>
 
-          <br />
+              {error && (
+                <p className="text-error">
+                  {error}
+                </p>
+              )}
 
-          <div>
-            <label>Role</label>
-            <br />
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
 
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="">Select Role</option>
-              <option value="Admin">Admin</option>
-              <option value="HR">HR</option>
-              <option value="Employee">Employee</option>
-              <option value="Manager">Manager</option>
-            </select>
-          </div>
-
-          <br />
-
-          {error && <p>{error}</p>}
-
-          <button type="submit">Login</button>
-        </form>
+            </div>
+          </form>
+        </Card>
       </div>
     </div>
   );
