@@ -108,7 +108,7 @@ function EmployeeForm({ mode = "add", employee }) {
       );
     }
 
-    navigate("/add-employee");
+    navigate("/employee-list");
   };
 
   let pageTitle;
@@ -142,14 +142,13 @@ function EmployeeForm({ mode = "add", employee }) {
             </p>
           </div>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/add-employee")}
-          >
-            <ArrowLeft size={16} />
-            Back to Employees
-          </Button>
+          <button
+          type="button"
+          className="back-btn"
+          onClick={() => navigate("/employee-list")}
+          ><ArrowLeft size={16} />
+          <span>Back to employees</span>
+          </button>
         </div>
 
         <div className="form-section">
@@ -650,13 +649,12 @@ function EmployeeForm({ mode = "add", employee }) {
 
         <div className="form-actions">
 
-          <button
-            type="button"
-            className="cancel-btn"
-            onClick={() => navigate("/add-employee")}
-          >
-            Cancel
-          </button>
+         <button
+  type="button"
+  onClick={() => navigate("/employee-list")}
+>
+  Cancel
+</button>
 
           <button
             type="submit"
