@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import data from "../../data/data.json";
 import "./EmployeeForm.css";
-import Button from "../../components/Button";
+import Button from "../../components/ui/Button";
 import { ArrowLeft } from "lucide-react";
 import { validateEmployee } from "./employeeValidation";
 
