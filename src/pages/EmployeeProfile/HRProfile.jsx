@@ -71,17 +71,17 @@ const HRProfile = () => {
       <div className="border-b bg-white px-6">
         <nav className="flex gap-6">
 
-          <NavLink to="/hr-profile/overview" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Overview</NavLink>
+          <NavLink to="/hr/overview" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Overview</NavLink>
 
-          <NavLink to="/hr-profile/personal" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Personal</NavLink>
+          <NavLink to="/hr/personal" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Personal</NavLink>
 
-          <NavLink to="/hr-profile/recruitment" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Recruitment</NavLink>
+          <NavLink to="/hr/recruitment" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Recruitment</NavLink>
 
-          <NavLink to="/hr-profile/employment" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Employment</NavLink>
+          <NavLink to="/hr/employment" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Employment</NavLink>
 
-          <NavLink to="/hr-profile/performance" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Performance</NavLink>
+          <NavLink to="/hr/performance" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Performance</NavLink>
 
-          <NavLink to="/hr-profile/documents" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Documents</NavLink>
+          <NavLink to="/hr/documents" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Documents</NavLink>
 
         </nav>
       </div>
