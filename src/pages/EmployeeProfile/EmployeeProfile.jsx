@@ -63,11 +63,7 @@ const EmployeeProfile = () => {
             {isCheckedIn ? "Check Out" : "Check In"}
           </button>
 
-          {/* LOGOUT */}
-          <button
-            type="button"
-            className="btn btn-logout"
-          >
+          <button type="button" className="btn btn-logout">
             Logout
           </button>
 
@@ -80,15 +76,15 @@ const EmployeeProfile = () => {
 
         <nav className="flex gap-6">
 
-          <NavLink to="/emp-profile/overview" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Overview</NavLink>
+          <NavLink to="/emp/overview" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Overview</NavLink>
 
-          <NavLink to="/emp-profile/personal" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Personal</NavLink>
+          <NavLink to="/emp/personal" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Personal</NavLink>
 
-          <NavLink to="/emp-profile/employment" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Employment</NavLink>
+          <NavLink to="/emp/employment" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Employment</NavLink>
 
-          <NavLink to="/emp-profile/performance" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Performance</NavLink>
+          <NavLink to="/emp/performance" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Performance</NavLink>
 
-          <NavLink to="/emp-profile/documents" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Documents</NavLink>
+          <NavLink to="/emp/documents" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Documents</NavLink>
 
         </nav>
 
