@@ -80,10 +80,13 @@ export default function Dashboard() {
     return <p className="muted">Loading dashboard…</p>;
   }
 
-  
   if (data.viewType === 'self') return <SelfDashboard data={data} user={user} />;
   if (data.viewType === 'team') return <TeamDashboard data={data} user={user} />;
-  if (data.viewType === 'hr') return <HRDashboard data={data} user={user} />;
+
+  if (user?.role === 'HR Manager' || data.viewType === 'hr') {
+    return <HRDashboard data={data} user={user} />;
+  }
+
   return <AdminDashboard data={data} user={user} />;
 }
 
@@ -117,8 +120,6 @@ function RoleHeader({ title, subtitle, role }) {
   );
 }
 
-
-
 function AdminDashboard({ data, user }) {
   const { stats, departmentDistribution, attendanceTrend, recentActivities, todayRecords } = data;
 
@@ -126,7 +127,7 @@ function AdminDashboard({ data, user }) {
     <div className="dashboard-page">
       <DashboardAtmosphere />
 
-      <RoleHeader title="Admin Dashboard" subtitle="Welcome back! Here is today's overview." role={user.role} />
+      <RoleHeader title="Admin Dashboard" subtitle="Avengers Assemble..." role={user.role} />
 
       <div className="grid grid-stats mb-4">
         <StatCard icon={Users} iconTone="indigo" label="Total Employees" value={stats.totalEmployees} delayMs={0} />
@@ -269,8 +270,6 @@ function AdminDashboard({ data, user }) {
   );
 }
 
-
-
 function HRDashboard({ data, user }) {
   const {
     stats,
@@ -285,7 +284,7 @@ function HRDashboard({ data, user }) {
     <div className="dashboard-page">
       <DashboardAtmosphere />
 
-      <RoleHeader title="HR Dashboard" subtitle="People & leave operations at a glance." role={user.role} />
+      <RoleHeader title="HR Dashboard" subtitle="the hell answers to me..." role={user.role} />
 
       <div className="grid grid-stats mb-4">
         <StatCard icon={Users} iconTone="indigo" label="Total Employees" value={stats.totalEmployees} delayMs={0} />
@@ -452,8 +451,6 @@ function HRDashboard({ data, user }) {
   );
 }
 
-
-
 function TeamDashboard({ data, user }) {
   const { manager, stats, attendanceStrip, todayRecords, pendingApprovalsList } = data;
   const firstName = manager?.firstName || user.name.split(' ')[0];
@@ -574,8 +571,6 @@ function TeamDashboard({ data, user }) {
     </div>
   );
 }
-
-
 
 function SelfDashboard({ data, user }) {
   const { employee, stats, attendanceStrip, leaveTypeBreakdown, recentLeaves, recentActivities } = data;
