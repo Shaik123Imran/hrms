@@ -1,0 +1,162 @@
+.employee-form {
+  width: 100%;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: var(--page-padding);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-xl);
+  box-sizing: border-box;
+}
+
+.employee-form .page-header {
+  margin-bottom: var(--space-6);
+}
+
+.employee-form .page-title {
+  margin-bottom: var(--space-2);
+}
+
+.employee-form .page-subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.form-section {
+  margin-bottom: var(--section-gap);
+  padding: var(--card-padding);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+}
+
+.form-section h2 {
+  margin-bottom: var(--space-5);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--form-gap);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.form-group label {
+  margin-bottom: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  min-height: var(--input-height-md);
+  padding: 0 var(--input-padding-horizontal);
+  border: var(--input-border-width) solid var(--input-border);
+  border-radius: var(--input-radius);
+  background-color: var(--input-background);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  box-sizing: border-box;
+}
+
+.form-group textarea {
+  height: 60px;
+  padding: var(--space-2) var(--input-padding-horizontal);
+}
+
+.form-group input:read-only {
+  background-color: var(--disabled-background);
+  color: var(--disabled-text);
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.cancel-btn,
+.submit-btn {
+  height: var(--button-height-md);
+  padding: 0 var(--button-padding-horizontal);
+  border: none;
+  border-radius: var(--button-radius);
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+}
+
+.cancel-btn {
+  background-color: var(--color-secondary-light);
+  color: var(--color-text-primary);
+}
+
+.cancel-btn:hover {
+  background-color: var(--color-border-dark);
+}
+
+.submit-btn {
+  background-color: var(--color-primary);
+  color: var(--color-text-white);
+}
+
+.submit-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.error-message {
+  margin-top: var(--space-2);
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .employee-form {
+    margin: 10px auto;
+    padding: var(--page-padding-mobile);
+  }
+
+  .form-section {
+    padding: var(--space-4);
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+  }
+
+  
+}
