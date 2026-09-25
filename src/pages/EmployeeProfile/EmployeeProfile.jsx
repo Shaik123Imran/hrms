@@ -1,6 +1,9 @@
+
 import { useState } from "react";
-import { NavLink, Routes, Route, Navigate,} from "react-router-dom";
-import employeeData from "../../data/HRData.js";
+import { NavLink, Routes, Route, Navigate } from "react-router-dom";
+import "../../style/tokens.css";
+import "../../style/global.css";
+import employeeData from "../../data/data.json";
 import EmployeeOverview from "../../components/employee/profile/EmployeeOverview.jsx";
 import Personal from "../../components/employee/profile/Personal.jsx";
 import Employment from "../../components/employee/profile/JobDetails.jsx";
@@ -10,7 +13,7 @@ import Documents from "../../components/employee/profile/Documents.jsx";
 const EmployeeProfile = () => {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
 
-  // Get all employees
+  // Get all employees from data.json
   const employees = employeeData?.employees || [];
 
   // Current employee
@@ -21,87 +24,92 @@ const EmployeeProfile = () => {
   // If employee is not found
   if (!hrData) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-red-600">
-          Employee data not found.
-        </p>
+      <div className="page-container">
+        <p className="text-error">Employee data not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="border-b bg-white px-6 py-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900"> {hrData.firstName} {hrData.lastName} </h1>
-            <p className="mt-1 text-sm text-gray-500"> {hrData.designation} • {hrData.department} </p>
-          </div>
+    <div className="page-container">
+
+
+      <div className="page-header">
+
+        {/* EMPLOYEE DETAILS */}
+        <div>
+          <h1 className="page-title">
+            {hrData.firstName} {hrData.lastName}
+          </h1>
+
+          <p className="text-muted">
+            {hrData.designation} • {hrData.department}
+          </p>
+        </div>
+
+        {/* ACTION BUTTONS */}
+        <div className="flex items-center gap-3">
+
           {/* CHECK IN / CHECK OUT */}
-          <button type="button" onClick={() => setIsCheckedIn((previous) => !previous)
-            }
-            className={`rounded-lg px-5 py-2 font-medium text-white transition ${
+          <button
+            type="button"
+            onClick={() => setIsCheckedIn((previous) => !previous)}
+            className={
               isCheckedIn
-                ? "bg-red-600 hover:bg-red-700"
-                : "bg-green-600 hover:bg-green-700"
-            }`}
+                ? "btn btn-danger"
+                : "btn btn-success"
+            }
           >
             {isCheckedIn ? "Check Out" : "Check In"}
           </button>
+
+          {/* LOGOUT */}
+          <button
+            type="button"
+            className="btn btn-logout"
+          >
+            Logout
+          </button>
+
         </div>
+
       </div>
 
-      <div className="border-b bg-white px-6">
+
+      <div className="surface-card">
+
         <nav className="flex gap-6">
-          <NavLink
-            to="/emp-profile/overview"
-            className={({ isActive }) =>`border-b-2 py-4 text-sm font-medium transition ${ isActive ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-900" } } >
-            Overview
-          </NavLink>
 
-          <NavLink
-            to="/emp-profile/personal"
-            className={({ isActive }) =>`border-b-2 py-4 text-sm font-medium transition ${ isActive ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-900" }` } >
-            Personal
-          </NavLink>
+          <NavLink to="/emp-profile/overview" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Overview</NavLink>
 
-          <NavLink
-            to="/emp-profile/employment"
-            className={({ isActive }) => `border-b-2 py-4 text-sm font-medium transition ${ isActive ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-900"}` } >
-            Employment
-          </NavLink>
+          <NavLink to="/emp-profile/personal" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Personal</NavLink>
 
-          <NavLink
-            to="/emp-profile/performance"
-            className={({ isActive }) => `border-b-2 py-4 text-sm font-medium transition ${ isActive ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-900" }` } >
-            Performance
-          </NavLink>
+          <NavLink to="/emp-profile/employment" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Employment</NavLink>
 
-          <NavLink
-            to="/emp-profile/documents"
-            className={({ isActive }) => `border-b-2 py-4 text-sm font-medium transition ${ isActive ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-900" }` } >
-            Documents
-          </NavLink>
+          <NavLink to="/emp-profile/performance" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Performance</NavLink>
+
+          <NavLink to="/emp-profile/documents" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Documents</NavLink>
+
         </nav>
+
       </div>
 
-
-      {/* PAGE CONTENT */}
-
-      <main className="p-6">
+      <main>
 
         <Routes>
-          <Route index element={ <Navigate to="overview" replace /> } />
 
-          <Route path="overview" element={ <EmployeeOverview hrData={hrData} attendance={employeeData?.attendance || []} /> } />
+          <Route index element={<Navigate to="overview" replace />} />
 
-          <Route path="personal" element={ <Personal hrData={hrData} /> } />
+          <Route path="overview" element={<EmployeeOverview hrData={hrData} attendance={employeeData?.attendance || []} />} />
 
-          <Route path="employment" element={ <Employment hrData={hrData} /> } />
+          <Route path="personal" element={<Personal hrData={hrData} />} />
 
-          <Route path="performance" element={ <Performance hrData={hrData} />  } />
+          <Route path="employment" element={<Employment hrData={hrData} />} />
 
-          <Route path="documents" element={ <Documents hrData={hrData} /> } />
+          <Route path="performance" element={<Performance hrData={hrData} />} />
+
+          <Route path="documents" element={<Documents hrData={hrData} />} />
+
         </Routes>
 
       </main>
