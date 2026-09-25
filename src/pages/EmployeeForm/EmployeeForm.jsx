@@ -27,18 +27,33 @@ function EmployeeForm({ mode = "add", employee }) {
     joinDate: "",
     salary: "",
     managerId: "",
-    skills: []
+    skills: ""
   };
 
-  const [formData, setFormData] = useState(
-    employee || emptyForm
-  );
+  const getEmployeeData = () => {
+    if (!employee) {
+      return emptyForm;
+    }
 
+    return {
+      ...employee,
+      skills: Array.isArray(employee.skills)
+        ? employee.skills.join(", ")
+        : employee.skills || ""
+    };
+  };
+
+  const [formData, setFormData] = useState(getEmployeeData());
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (employee) {
-      setFormData(employee);
+      setFormData({
+        ...employee,
+        skills: Array.isArray(employee.skills)
+          ? employee.skills.join(", ")
+          : employee.skills || ""
+      });
     }
   }, [employee]);
 
@@ -76,10 +91,19 @@ function EmployeeForm({ mode = "add", employee }) {
       employees = data.employees;
     }
 
+    const skills = formData.skills
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill !== "");
+
     if (mode === "edit") {
       const updatedEmployees = employees.map((item) => {
         if (item.id === formData.id) {
-          return formData;
+          return {
+            ...formData,
+            salary: Number(formData.salary) || 0,
+            skills: skills
+          };
         }
 
         return item;
@@ -94,7 +118,7 @@ function EmployeeForm({ mode = "add", employee }) {
         ...formData,
         id: `e${Date.now()}`,
         salary: Number(formData.salary) || 0,
-        skills: formData.skills
+        skills: skills
       };
 
       const updatedEmployees = [
@@ -131,6 +155,7 @@ function EmployeeForm({ mode = "add", employee }) {
       onSubmit={handleSubmit}
     >
       <div>
+
         <div className="page-header">
           <div>
             <h2 className="page-title">
@@ -143,11 +168,12 @@ function EmployeeForm({ mode = "add", employee }) {
           </div>
 
           <button
-          type="button"
-          className="back-btn"
-          onClick={() => navigate("/employee-list")}
-          ><ArrowLeft size={16} />
-          <span>Back to employees</span>
+            type="button"
+            className="back-btn"
+            onClick={() => navigate("/employee-list")}
+          >
+            <ArrowLeft size={16} />
+            <span>Back to employees</span>
           </button>
         </div>
 
@@ -294,9 +320,7 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.department}
                 onChange={handleChange}
               >
-                <option value="">
-                  Select Department
-                </option>
+                <option value="">Select Department</option>
 
                 {data.departments.map((department) => (
                   <option
@@ -323,9 +347,7 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.designation}
                 onChange={handleChange}
               >
-                <option value="">
-                  Select Designation
-                </option>
+                <option value="">Select Designation</option>
 
                 {data.designations.map((designation) => (
                   <option
@@ -352,21 +374,11 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.employeeType}
                 onChange={handleChange}
               >
-                <option value="">
-                  Select Employee Type
-                </option>
-                <option value="Full-time">
-                  Full-time
-                </option>
-                <option value="Part-time">
-                  Part-time
-                </option>
-                <option value="Contract">
-                  Contract
-                </option>
-                <option value="Intern">
-                  Intern
-                </option>
+                <option value="">Select Employee Type</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Contract">Contract</option>
+                <option value="Intern">Intern</option>
               </select>
 
               {errors.employeeType && (
@@ -384,12 +396,8 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.status}
                 onChange={handleChange}
               >
-                <option value="Active">
-                  Active
-                </option>
-                <option value="Inactive">
-                  Inactive
-                </option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
               </select>
             </div>
 
@@ -437,7 +445,7 @@ function EmployeeForm({ mode = "add", employee }) {
           <div className="form-grid">
 
             <div className="form-group full-width">
-              
+              <label>Address</label>
 
               <textarea
                 name="address"
@@ -480,121 +488,35 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.state}
                 onChange={handleChange}
               >
-                <option value="">
-                  Select State
-                </option>
-
-                <option value="Andhra Pradesh">
-                  Andhra Pradesh
-                </option>
-
-                <option value="Arunachal Pradesh">
-                  Arunachal Pradesh
-                </option>
-
-                <option value="Assam">
-                  Assam
-                </option>
-
-                <option value="Bihar">
-                  Bihar
-                </option>
-
-                <option value="Chhattisgarh">
-                  Chhattisgarh
-                </option>
-
-                <option value="Goa">
-                  Goa
-                </option>
-
-                <option value="Gujarat">
-                  Gujarat
-                </option>
-
-                <option value="Haryana">
-                  Haryana
-                </option>
-
-                <option value="Himachal Pradesh">
-                  Himachal Pradesh
-                </option>
-
-                <option value="Jharkhand">
-                  Jharkhand
-                </option>
-
-                <option value="Karnataka">
-                  Karnataka
-                </option>
-
-                <option value="Kerala">
-                  Kerala
-                </option>
-
-                <option value="Madhya Pradesh">
-                  Madhya Pradesh
-                </option>
-
-                <option value="Maharashtra">
-                  Maharashtra
-                </option>
-
-                <option value="Manipur">
-                  Manipur
-                </option>
-
-                <option value="Meghalaya">
-                  Meghalaya
-                </option>
-
-                <option value="Mizoram">
-                  Mizoram
-                </option>
-
-                <option value="Nagaland">
-                  Nagaland
-                </option>
-
-                <option value="Odisha">
-                  Odisha
-                </option>
-
-                <option value="Punjab">
-                  Punjab
-                </option>
-
-                <option value="Rajasthan">
-                  Rajasthan
-                </option>
-
-                <option value="Sikkim">
-                  Sikkim
-                </option>
-
-                <option value="Tamil Nadu">
-                  Tamil Nadu
-                </option>
-
-                <option value="Telangana">
-                  Telangana
-                </option>
-
-                <option value="Tripura">
-                  Tripura
-                </option>
-
-                <option value="Uttar Pradesh">
-                  Uttar Pradesh
-                </option>
-
-                <option value="Uttarakhand">
-                  Uttarakhand
-                </option>
-
-                <option value="West Bengal">
-                  West Bengal
-                </option>
+                <option value="">Select State</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
               </select>
 
               {errors.state && (
@@ -631,37 +553,35 @@ function EmployeeForm({ mode = "add", employee }) {
           <div className="form-grid">
             <div className="form-group full-width">
 
+              <label>Skills</label>
+
               <textarea
                 name="skills"
                 value={formData.skills}
-                onChange={(event) => {
-                  setFormData({
-                    ...formData,
-                    skills: event.target.value.split(",")
-                  });
-                }}
+                onChange={handleChange}
                 placeholder="Enter skills separated by commas"
               />
+
             </div>
           </div>
-
         </div>
 
         <div className="form-actions">
 
-         <button
-  type="button"
-  onClick={() => navigate("/employee-list")}
->
-  Cancel
-</button>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => navigate("/employee-list")}
+          >
+            Cancel
+          </Button>
 
-          <button
+          <Button
             type="submit"
             className="submit-btn"
           >
             {buttonText}
-          </button>
+          </Button>
 
         </div>
 
