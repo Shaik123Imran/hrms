@@ -1,4 +1,4 @@
-import EmptyState from "Emptystate";
+import EmptyState from "./EmptyState";
 
 export default function Table({
   columns,
