@@ -88,7 +88,16 @@ export async function fetchDashboardData() {
     (record) => record.status === 'On Leave'
   ).length;
   const lateToday = todayRecords.filter((record) => record.status === 'Late').length;
-  const pendingLeaves = leaves.filter((leave) => leave.status === 'Pending').length;
+
+  const pendingLeavesList = leaves.filter((leave) => leave.status === 'Pending');
+  const pendingLeaveRequests = pendingLeavesList.slice(0, 5).map((leave) => {
+    const employee = employees.find((item) => item.id === leave.employeeId);
+    return {
+      ...leave,
+      employeeName: employee ? `${employee.firstName} ${employee.lastName}` : leave.employeeId,
+    };
+  });
+  const pendingLeaves = pendingLeavesList.length;
 
   const stats = {
     totalEmployees: employees.length,
@@ -98,6 +107,8 @@ export async function fetchDashboardData() {
     pendingLeaves,
     departments: departmentDistribution.length,
     avgAttendance: 94,
+    newJoiners: 4,
+    approvedThisMonth: leaves.filter((leave) => leave.status === 'Approved').length,
   };
 
   const todayRecordsWithNames = todayRecords.map((record) => {
@@ -108,15 +119,25 @@ export async function fetchDashboardData() {
     };
   });
 
+  const leaveTrend = db.dashboard?.leaveTrend || [
+    { month: 'Jan', requests: 12 },
+    { month: 'Feb', requests: 19 },
+    { month: 'Mar', requests: 15 },
+    { month: 'Apr', requests: 22 },
+    { month: 'May', requests: 30 },
+    { month: 'Jun', requests: 25 },
+  ];
+
   return delay({
     stats,
     departmentDistribution,
     attendanceTrend: db.dashboard.attendanceTrend,
+    leaveTrend,
+    pendingLeaveRequests,
     recentActivities: db.dashboard.recentActivities,
     todayRecords: todayRecordsWithNames,
   });
 }
-
 
 const LEAVE_TYPES_COUNTED_TOWARD_BALANCE = ['Casual Leave', 'Sick Leave', 'Earned Leave'];
 
@@ -184,7 +205,6 @@ export async function fetchMyDashboardData(employeeId) {
     recentActivities: db.dashboard.recentActivities.slice(0, 4),
   });
 }
-
 
 export async function fetchTeamDashboardData(managerId) {
   const db = readDb();
@@ -258,7 +278,6 @@ export async function fetchTeamDashboardData(managerId) {
 
 const ORG_VIEW_ROLES = ['Admin', 'HR Manager'];
 
-
 export async function fetchDashboardForUser(user) {
   if (!user) return null;
   if (ORG_VIEW_ROLES.includes(user.role)) {
@@ -272,7 +291,6 @@ export async function fetchDashboardForUser(user) {
   const data = await fetchMyDashboardData(user.employeeId);
   return { viewType: 'self', ...data };
 }
-
 
 export async function createEmployee(employee) {
   const db = readDb();
@@ -342,7 +360,6 @@ export async function login(email, password, demoRole) {
       employeeId: user.employeeId ?? null,
     };
   } else if (demoRole) {
-    
     const DEMO_ROLE_MAP = {
       hr: { role: 'HR Manager', employeeId: null },
       manager: { role: 'Manager', employeeId: 'e4' },
