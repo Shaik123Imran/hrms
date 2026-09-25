@@ -1,4 +1,4 @@
-import EmptyState from './components/ui/EmptyState';
+import EmptyState from "Emptystate";
 
 export default function Table({
   columns,
