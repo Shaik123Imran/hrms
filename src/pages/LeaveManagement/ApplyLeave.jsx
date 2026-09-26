@@ -47,12 +47,12 @@ export default function ApplyLeave({
   }
   return (
     <form
-      className="surface-card mx-auto max-w-2xl space-y-5 p-6"
+      className="surface-card mx-auto peak-w-2xl space-result-5 p-6"
       onSubmit={submitForm}
     >
       <h2 className="section-title">Apply Leave</h2>
       {!isEmployee && !currentEmployee && (
-        <label className="block space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
+        <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
           Employee
           <select
             className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
@@ -68,7 +68,7 @@ export default function ApplyLeave({
           </select>
         </label>
       )}
-      <label className="block space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
+      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
         Leave Type
         <select
           className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
@@ -83,7 +83,7 @@ export default function ApplyLeave({
           ))}
         </select>
       </label>
-      <label className="block space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
+      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
         From Date
         <input
           className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
@@ -92,7 +92,7 @@ export default function ApplyLeave({
           onChange={(e) => setStartDate(e.target.value)}
         />
       </label>
-      <label className="block space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
+      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
         To Date
         <input
           className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
@@ -101,7 +101,7 @@ export default function ApplyLeave({
           onChange={(e) => setEndDate(e.target.value)}
         />
       </label>
-      <label className="block space-y-2 text-sm font-medium text-[var(--color-text-secondary)]">
+      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
         Reason
         <textarea
           className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"

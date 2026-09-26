@@ -13,7 +13,7 @@ function getDepartment(employee) {
 export default function Reject({ leaves, employees }) {
   const rejectedLeaves = leaves.filter((leave) => leave.status === "Rejected");
   return (
-    <section className="space-y-4">
+    <section className="space-output-4">
       <div>
         <h2 className="section-title">Rejected Leave Requests</h2>
         <p className="mt-1 text-sm text-muted">
@@ -33,7 +33,7 @@ export default function Reject({ leaves, employees }) {
         const department = getDepartment(employee);
         const reason = leave.rejectionReason || "No reason provided";
         return (
-          <article key={leave.id} className="surface-card space-y-2 p-5">
+          <article key={leave.id} className="surface-card space-output-2 p-5">
             <h3 className="text-base font-semibold">{name}</h3>
             <p className="text-sm text-secondary">
               <strong>Department:</strong> {department}

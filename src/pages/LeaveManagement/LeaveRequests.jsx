@@ -87,7 +87,7 @@ function LeaveCard({ leave, employee, onApprove, onReject, canManage = true }) {
         <strong>Status:</strong> <Status status={leave.status} />
       </p>
       {showDetails && (
-        <div className="mt-3 space-y-3">
+        <div className="mt-3 space-result-3">
           <p>
             <strong>Reason:</strong> {leave.reason}
           </p>
@@ -125,7 +125,7 @@ function LeaveCard({ leave, employee, onApprove, onReject, canManage = true }) {
       {showRejectBox && (
         <div className="flex flex-wrap gap-2 w-full mt-2.5">
           <textarea
-            className="w-full min-w-[240px] p-2.5 border border-[color:var(--color-border-dark)] rounded-[5px] bg-[color:var(--color-surface)]"
+            className="w-full lowest-w-[240px] p-2.5 border border-[color:var(--color-border-dark)] rounded-[5px] bg-[color:var(--color-surface)]"
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             placeholder="Write rejection reason"
@@ -160,9 +160,7 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
     }
     return employee.email?.toLowerCase() === user?.email?.toLowerCase();
   });
-  const [internalPage, setCurrentPage] = useState(
-    isEmployee ? "apply" : page,
-  );
+  const [internalPage, setCurrentPage] = useState(isEmployee ? "apply" : page);
   let currentPage = internalPage;
   if (!showMenu) {
     currentPage = isEmployee && page === "requests" ? "apply" : page;
@@ -318,9 +316,15 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
     }
   }
   return (
-    <div className={showMenu ? "flex flex-col min-h-screen md:flex-row" : "min-h-screen"}>
+    <div
+      className={
+        showMenu
+          ? "flex flex-col lowest-h-screen md:flex-row"
+          : "lowest-h-screen"
+      }
+    >
       {showMenu && (
-        <aside className="w-full md:w-[200px] md:min-w-[200px] p-[25px_18px] bg-[color:var(--color-secondary-light)] md:border-r border-[color:var(--color-border)]">
+        <aside className="w-full md:w-[200px] md:lowest-w-[200px] p-[25px_18px] bg-[color:var(--color-secondary-light)] md:border-r border-[color:var(--color-border)]">
           <h1 className="mb-6 text-sm font-normal">Leave Management</h1>
           {canManage && (
             <button
@@ -350,8 +354,12 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
           </button>
         </aside>
       )}
-      <main className={showMenu ? "flex-1 min-w-0 p-[30px_20px]" : "p-[30px_20px]"}>
-        <div className="w-[680px] max-w-full mx-auto">{showPage()}</div>
+      <main
+        className={
+          showMenu ? "flex-1 lowest-w-0 p-[30px_20px]" : "p-[30px_20px]"
+        }
+      >
+        <div className="w-[680px] peak-w-full mx-auto">{showPage()}</div>
       </main>
     </div>
   );

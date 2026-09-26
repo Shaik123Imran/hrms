@@ -13,7 +13,7 @@ const getDepartment = (employee) => {
 export default function Approved({ leaves, employees }) {
   const approvedLeaves = leaves.filter((leave) => leave.status === "Approved");
   return (
-    <section className="space-y-4">
+    <section className="space-result-4">
       <div>
         <h2 className="section-title">Approved Leave Requests</h2>
         <p className="mt-1 text-sm text-muted">Approved employee leave</p>
@@ -30,7 +30,7 @@ export default function Approved({ leaves, employees }) {
         const department = getDepartment(employee);
         const employeeName = getEmployeeName(employee);
         return (
-          <article key={leave.id} className="surface-card space-y-2 p-5">
+          <article key={leave.id} className="surface-card space-result-2 p-5">
             <h3 className="text-base font-semibold">{employeeName}</h3>
             <p className="text-sm text-secondary">
               <strong>Department:</strong> {department}
