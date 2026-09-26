@@ -6,8 +6,14 @@ const leaveTypes = [
   "Comp Off",
   "Work From Home",
 ];
-export default function ApplyLeave({ employees, onApply, onCancel }) {
-  const [employeeId, setEmployeeId] = useState("");
+export default function ApplyLeave({
+  employees,
+  onApply,
+  onCancel,
+  isEmployee,
+  currentEmployee,
+}) {
+  const [employeeId, setEmployeeId] = useState(currentEmployee?.id || "");
   const [leaveType, setLeaveType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -34,27 +40,38 @@ export default function ApplyLeave({ employees, onApply, onCancel }) {
       days: numberOfDays,
       reason,
     });
+    setLeaveType("");
+    setStartDate("");
+    setEndDate("");
+    setReason("");
   }
   return (
-    <form className="card form" onSubmit={submitForm}>
-      <h2>Apply Leave</h2>
-      <label>
-        Employee
-        <select
-          value={employeeId}
-          onChange={(e) => setEmployeeId(e.target.value)}
-        >
-          <option value="">Select employee</option>
-          {employees.map((emp) => (
-            <option key={emp.id} value={emp.id}>
-              {emp.firstName} {emp.lastName}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
+    <form
+      className="surface-card mx-auto peak-w-2xl space-result-5 p-6"
+      onSubmit={submitForm}
+    >
+      <h2 className="section-title">Apply Leave</h2>
+      {!isEmployee && !currentEmployee && (
+        <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
+          Employee
+          <select
+            className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
+            value={employeeId}
+            onChange={(e) => setEmployeeId(e.target.value)}
+          >
+            <option value="">Select employee</option>
+            {employees.map((emp) => (
+              <option key={emp.id} value={emp.id}>
+                {emp.firstName} {emp.lastName}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
         Leave Type
         <select
+          className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
           value={leaveType}
           onChange={(e) => setLeaveType(e.target.value)}
         >
@@ -66,35 +83,45 @@ export default function ApplyLeave({ employees, onApply, onCancel }) {
           ))}
         </select>
       </label>
-      <label>
+      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
         From Date
         <input
+          className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
       </label>
-      <label>
+      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
         To Date
         <input
+          className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
       </label>
-      <label>
+      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
         Reason
         <textarea
+          className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
           rows="4"
           value={reason}
           onChange={(e) => setReason(e.target.value)}
         />
       </label>
-      <div className="buttons">
-        <button type="button" onClick={onCancel}>
+      <div className="flex flex-wrap justify-end gap-3">
+        <button
+          className="rounded-[var(--button-radius)] border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-secondary)]"
+          type="button"
+          onClick={onCancel}
+        >
           Cancel
         </button>
-        <button className="blue-button" type="submit">
+        <button
+          className="rounded-[var(--button-radius)] bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-text-white)] hover:bg-[var(--color-primary-hover)]"
+          type="submit"
+        >
           Submit
         </button>
       </div>

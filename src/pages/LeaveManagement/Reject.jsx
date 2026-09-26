@@ -1,5 +1,8 @@
 function getEmployeeName(employee) {
-  return employee ? `${employee.firstName} ${employee.lastName}` : "Unknown employee";
+  if (!employee) {
+    return "Unknown employee";
+  }
+  return `${employee.firstName} ${employee.lastName}`;
 }
 function getDepartment(employee) {
   if (employee) {
@@ -8,26 +11,49 @@ function getDepartment(employee) {
   return "Not available";
 }
 export default function Reject({ leaves, employees }) {
-  const rejectedLeaves = leaves.filter(leave => leave.status == "Rejected");
+  const rejectedLeaves = leaves.filter((leave) => leave.status === "Rejected");
   return (
-    <section>
-      <h2>Rejected Leave Requests</h2>
-      <p>Leave for the following employees has been rejected</p>
-      {!rejectedLeaves.length && <p className="empty">There are no rejected requests.</p>}
-      {rejectedLeaves.map(leave => {
-        let employee = employees.find(person => person.id === leave.employeeId);
+    <section className="space-output-4">
+      <div>
+        <h2 className="section-title">Rejected Leave Requests</h2>
+        <p className="mt-1 text-sm text-muted">
+          Leave for the following employees has been rejected
+        </p>
+      </div>
+      {!rejectedLeaves.length && (
+        <p className="empty surface-card rounded-[var(--card-radius)]">
+          There are no rejected requests.
+        </p>
+      )}
+      {rejectedLeaves.map((leave) => {
+        const employee = employees.find(
+          (person) => person.id === leave.employeeId,
+        );
         const name = getEmployeeName(employee);
         const department = getDepartment(employee);
-        let reason = leave.rejectionReason || "No reason provided";
+        const reason = leave.rejectionReason || "No reason provided";
         return (
-          <article key={leave.id} className="leave-card">
-            <h3>{name}</h3>
-            <p><strong>Department:</strong> {department}</p>
-            <p><strong>Leave Type:</strong> {leave.type}</p>
-            <p><strong>Dates:</strong> {leave.startDate} to {leave.endDate}</p>
-            <p><strong>Days:</strong> {leave.days}</p>
-            <p><strong>Status:</strong> <span className="status rejected">Rejected</span></p>
-            <p><strong>Reason:</strong> {reason}</p>
+          <article key={leave.id} className="surface-card space-output-2 p-5">
+            <h3 className="text-base font-semibold">{name}</h3>
+            <p className="text-sm text-secondary">
+              <strong>Department:</strong> {department}
+            </p>
+            <p className="text-sm text-secondary">
+              <strong>Leave Type:</strong> {leave.type}
+            </p>
+            <p className="text-sm text-secondary">
+              <strong>Dates:</strong> {leave.startDate} to {leave.endDate}
+            </p>
+            <p className="text-sm text-secondary">
+              <strong>Days:</strong> {leave.days}
+            </p>
+            <p className="text-sm text-secondary">
+              <strong>Status:</strong>{" "}
+              <span className="badge badge-error">Rejected</span>
+            </p>
+            <p className="text-sm text-secondary">
+              <strong>Reason:</strong> {reason}
+            </p>
           </article>
         );
       })}
