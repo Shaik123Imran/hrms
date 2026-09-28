@@ -1,71 +1,130 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import data from "../../data/data.json";
-import ApplyLeave from "./ApplyLeave.jsx";
-import Approved from "./Approved.jsx";
-import Reject from "./Reject.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
+import data from "../../data/data.json";
 import Card from "../../components/ui/Card.jsx";
 import Button from "../../components/ui/Button.jsx";
 import EmptyState from "../../components/ui/EmptyState.jsx";
-const storageKey = "hrms_leave_data";
-const statusApproved =
-  "badge bg-[color:var(--color-success-light)] text-[color:var(--leave-approved)]";
-const statusPending =
-  "badge bg-[color:var(--color-warning-light)] text-[color:var(--leave-pending)]";
-const statusRejected =
-  "badge bg-[color:var(--color-error-light)] text-[color:var(--leave-rejected)]";
-function readLeaveData() {
-  const savedData = localStorage.getItem(storageKey);
-  if (savedData) {
-    try {
-      return JSON.parse(savedData);
-    } catch {
-      localStorage.removeItem(storageKey);
+const STORAGE_KEY = "hrms_leave_data";
+const OLD_MANAGER_ID = "e13";
+function getStartingLeaveData() {
+  return { employees: data.employees, leaves: data.leaves };
+}
+export function readLeaveData() {
+  const savedValue = localStorage.getItem(STORAGE_KEY);
+  if (!savedValue) {
+    const startingData = getStartingLeaveData();
+    saveLeaveData(startingData);
+    return startingData;
+  }
+  try {
+    const savedData = JSON.parse(savedValue);
+    let savedEmployees = [];
+    if (Array.isArray(savedData.employees)) {
+      savedEmployees = savedData.employees;
     }
+    const manager = data.users.find((user) => user.role === "Manager");
+    const employees = data.employees.map((employee) => {
+      const savedEmployee = savedEmployees.find(
+        (item) => item.id === employee.id,
+      );
+      if (!savedEmployee) {
+        return employee;
+      }
+      return {
+        ...savedEmployee,
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        email: employee.email,
+      };
+    });
+    const extraEmployees = savedEmployees.filter((employee) => {
+      const isOldManager = employee.id === OLD_MANAGER_ID;
+      const employeeAlreadyExists = data.employees.some(
+        (item) => item.id === employee.id,
+      );
+      return !isOldManager && !employeeAlreadyExists;
+    });
+    employees.push(...extraEmployees);
+    let savedLeaves = data.leaves;
+    if (Array.isArray(savedData.leaves)) {
+      savedLeaves = savedData.leaves;
+    }
+    const leaves = savedLeaves.map((leave) => {
+      if (leave.employeeId === OLD_MANAGER_ID && manager?.employeeId) {
+        return { ...leave, employeeId: manager.employeeId };
+      }
+      return leave;
+    });
+    return { employees, leaves };
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+    const startingData = getStartingLeaveData();
+    saveLeaveData(startingData);
+    return startingData;
   }
-  const startingData = {
-    employees: data.employees,
-    leaves: data.leaves,
-  };
-  localStorage.setItem(storageKey, JSON.stringify(startingData));
-  return startingData;
 }
-function Status({ status }) {
-  const variants = {
-    Approved: statusApproved,
-    Pending: statusPending,
-    Rejected: statusRejected,
-  };
-  const className = variants[status] || statusPending;
-  return <span className={className}>{status}</span>;
+export function saveLeaveData(leaveData) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(leaveData));
 }
-function LeaveCard({ leave, employee, onApprove, onReject, canManage = true }) {
+const statusClassNames = {
+  Approved:
+    "badge bg-[color:var(--color-success-light)] text-[color:var(--leave-approved)]",
+  Pending:
+    "badge bg-[color:var(--color-warning-light)] text-[color:var(--leave-pending)]",
+  Rejected:
+    "badge bg-[color:var(--color-error-light)] text-[color:var(--leave-rejected)]",
+};
+const rejectionBoxStyle = {
+  width: "100%",
+  padding: "var(--space-3)",
+  border: "var(--input-border-width) solid var(--input-border)",
+  borderRadius: "var(--input-radius)",
+  background: "var(--input-background)",
+  color: "var(--color-text-primary)",
+};
+export function LeaveCard({
+  leave,
+  employee,
+  canReview = false,
+  onApprove,
+  onReject,
+}) {
   const [showDetails, setShowDetails] = useState(false);
-  const [showRejectBox, setShowRejectBox] = useState(false);
-  const [reason, setReason] = useState("");
+  const [showRejectForm, setShowRejectForm] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
   let employeeName = "Unknown employee";
-  let department = "Not available";
   if (employee) {
-    employeeName = `${employee.firstName} ${employee.lastName}`;
-    department = employee.department;
+    employeeName = `${employee.firstName} ${employee.lastName}`.trim();
   }
-  function confirmReject() {
-    if (reason.trim() === "") {
+  function rejectLeave() {
+    if (!rejectionReason.trim()) {
       window.alert("Please enter a rejection reason");
       return;
     }
-    onReject(leave.id, reason);
-    setReason("");
-    setShowRejectBox(false);
+    onReject(leave.id, rejectionReason.trim());
+    setRejectionReason("");
+    setShowRejectForm(false);
+  }
+  let statusClassName = statusClassNames[leave.status];
+  if (!statusClassName) {
+    statusClassName = statusClassNames.Pending;
   }
   return (
-    <Card title={employeeName} className="mb-4" bodyClassName="space-result-2">
+    <Card title={employeeName} className="mb-4" bodyClassName="space-y-2">
       <p>
-        <strong>Department:</strong> {department}
+        <strong>Employee ID:</strong> {employee?.id || leave.employeeId}
       </p>
       <p>
-        <strong>Leave Type:</strong> {leave.type}
+        <strong>Department:</strong> {employee?.department || "Not available"}
+      </p>
+      <p>
+        <strong>Designation:</strong> {employee?.designation || "Not available"}
+      </p>
+      <p>
+        <strong>Email:</strong> {employee?.email || "Not available"}
+      </p>
+      <p>
+        <strong>Leave type:</strong> {leave.type}
       </p>
       <p>
         <strong>Dates:</strong> {leave.startDate} to {leave.endDate}
@@ -74,12 +133,13 @@ function LeaveCard({ leave, employee, onApprove, onReject, canManage = true }) {
         <strong>Days:</strong> {leave.days}
       </p>
       <p>
-        <strong>Status:</strong> <Status status={leave.status} />
+        <strong>Status:</strong>{" "}
+        <span className={statusClassName}>{leave.status}</span>
       </p>
       {showDetails && (
-        <div className="space-result-3">
+        <div className="space-y-2">
           <p>
-            <strong>Reason:</strong> {leave.reason}
+            <strong>Reason:</strong> {leave.reason || "No reason provided"}
           </p>
           {leave.rejectionReason && (
             <p>
@@ -96,7 +156,7 @@ function LeaveCard({ leave, employee, onApprove, onReject, canManage = true }) {
         >
           {showDetails ? "Hide Details" : "View Details"}
         </Button>
-        {canManage && leave.status === "Pending" && (
+        {canReview && leave.status === "Pending" && (
           <>
             <Button size="sm" onClick={() => onApprove(leave.id)}>
               Approve
@@ -104,186 +164,154 @@ function LeaveCard({ leave, employee, onApprove, onReject, canManage = true }) {
             <Button
               variant="danger"
               size="sm"
-              onClick={() => setShowRejectBox(true)}
+              onClick={() => setShowRejectForm(true)}
             >
               Reject
             </Button>
           </>
         )}
       </div>
-      {showRejectBox && (
-        <div className="flex w-full flex-wrap gap-2">
+      {showRejectForm && (
+        <div className="space-y-2">
           <textarea
-            className="field-input w-full smallest-w-[240px]"
-            value={reason}
-            onChange={(event) => setReason(event.target.value)}
+            rows={3}
+            value={rejectionReason}
+            onChange={(event) => setRejectionReason(event.target.value)}
             placeholder="Write rejection reason"
-            rows="3"
+            style={rejectionBoxStyle}
           />
-          <Button variant="danger" size="sm" onClick={confirmReject}>
-            Confirm Reject
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setShowRejectBox(false)}
-          >
-            Cancel
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="danger" size="sm" onClick={rejectLeave}>
+              Confirm Reject
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowRejectForm(false)}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       )}
     </Card>
   );
 }
-export default function LeaveRequests({ page = "requests", showMenu = true }) {
+export default function LeaveRequests() {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const startingData = readLeaveData();
-  const [employees] = useState(startingData.employees);
-  const [leaves, setLeaves] = useState(startingData.leaves);
+  const [leaveData, setLeaveData] = useState(() => readLeaveData());
+  const [filter, setFilter] = useState("All");
+  const employees = leaveData.employees;
+  const leaves = leaveData.leaves;
   const role = String(user?.role || "").toLowerCase();
-  const isEmployee = role === "employee";
-  const canManage = ["admin", "hr", "hr manager", "manager"].includes(role);
+  const isHr = role === "hr" || role === "hr manager";
+  const isAdmin = role === "admin";
+  const isManager = role === "manager";
+  const canViewRequests = isHr || isAdmin || isManager;
   const currentEmployee = employees.find((employee) => {
     if (user?.employeeId && employee.id === user.employeeId) {
       return true;
     }
     return employee.email?.toLowerCase() === user?.email?.toLowerCase();
   });
-  const [internalPage, setCurrentPage] = useState(isEmployee ? "apply" : page);
-  let currentPage = internalPage;
-  if (!showMenu) {
-    currentPage = isEmployee && page === "requests" ? "apply" : page;
-  }
-  const [filter, setFilter] = useState("All");
-  let visibleLeaves = [];
-  if (canManage) {
-    visibleLeaves = leaves;
-  } else if (currentEmployee) {
+  let visibleLeaves = leaves;
+  if (!isHr && !isAdmin && !isManager) {
     visibleLeaves = leaves.filter(
-      (leave) => leave.employeeId === currentEmployee.id,
+      (leave) => leave.employeeId === currentEmployee?.id,
     );
   }
-  function saveLeaves(newLeaves) {
-    setLeaves(newLeaves);
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify({
-        employees,
-        leaves: newLeaves,
-      }),
-    );
-  }
-  function changeLeaveStatus(id, status, reason = "") {
-    if (!canManage) {
-      return;
+  function canReviewLeave(leave, employee) {
+    if (!leave) {
+      return false;
     }
-    const changedLeaves = leaves.map((leave) =>
-      leave.id === id ? { ...leave, status, rejectionReason: reason } : leave,
-    );
-    saveLeaves(changedLeaves);
-  }
-  function addLeave(newLeave) {
-    if (isEmployee && !currentEmployee) {
-      return;
+    const isMyRequest =
+      leave.employeeId === currentEmployee?.id ||
+      leave.applicantUserId === user?.id;
+    if (isMyRequest) {
+      return false;
     }
-    const leaveToSave = {
-      ...newLeave,
-      employeeId: currentEmployee?.id || newLeave.employeeId,
-      id: `lv${leaves.length + 1}`,
-      status: "Pending",
-      rejectionReason: "",
-    };
-    saveLeaves([...leaves, leaveToSave]);
-    if (!isEmployee) {
-      if (showMenu) {
-        setCurrentPage("requests");
+    let applicantRole = leave.applicantRole;
+    if (!applicantRole) {
+      if (employee?.department === "HR") {
+        applicantRole = "hr";
       } else {
-        navigate("/leave/requests");
+        applicantRole = "employee";
       }
     }
+    if (isHr) {
+      return (
+        applicantRole === "employee" ||
+        applicantRole === "manager" ||
+        applicantRole === "admin"
+      );
+    }
+    if (isAdmin) {
+      return true;
+    }
+    if (isManager) {
+      return applicantRole === "admin";
+    }
+    return false;
   }
-  let leavesToShow = visibleLeaves;
+  function updateLeaveStatus(leaveId, status, rejectionReason = "") {
+    const targetLeave = leaves.find((leave) => leave.id === leaveId);
+    const employee = employees.find(
+      (item) => item.id === targetLeave?.employeeId,
+    );
+    if (
+      !targetLeave ||
+      targetLeave.status !== "Pending" ||
+      !canReviewLeave(targetLeave, employee)
+    ) {
+      return;
+    }
+    const updatedLeaves = leaves.map((leave) => {
+      if (leave.id === leaveId) {
+        return { ...leave, status, rejectionReason };
+      }
+      return leave;
+    });
+    const updatedData = { employees, leaves: updatedLeaves };
+    setLeaveData(updatedData);
+    saveLeaveData(updatedData);
+  }
+  if (!canViewRequests) {
+    return (
+      <EmptyState title="You don't have access to the leave request queue." />
+    );
+  }
+  let requests = visibleLeaves;
   if (filter === "Pending") {
-    leavesToShow = visibleLeaves.filter((leave) => leave.status === "Pending");
+    requests = visibleLeaves.filter((leave) => leave.status === "Pending");
   }
-  function showPage() {
-    switch (currentPage) {
-      case "apply":
-        return (
-          <>
-            {isEmployee && !currentEmployee ? (
-              <EmptyState
-                title="Employee account not linked"
-                description="Ask the login or data team to connect this account to an employee ID."
-              />
-            ) : (
-              <ApplyLeave
-                employees={employees}
-                onApply={addLeave}
-                onCancel={() => {
-                  if (showMenu) {
-                    setCurrentPage(isEmployee ? "apply" : "requests");
-                  } else {
-                    navigate(isEmployee ? "/leave/apply" : "/leave/requests");
-                  }
-                }}
-                isEmployee={isEmployee}
-                currentEmployee={currentEmployee}
-              />
-            )}
-            {isEmployee && currentEmployee && (
-              <section className="mt-6">
-                <h2 className="section-title mb-4">My Leave Requests</h2>
-                {visibleLeaves.length === 0 && (
-                  <EmptyState title="No leave requests yet" />
-                )}
-                {visibleLeaves.map((leave) => (
-                  <LeaveCard
-                    key={leave.id}
-                    leave={leave}
-                    employee={currentEmployee}
-                    canManage={false}
-                  />
-                ))}
-              </section>
-            )}
-          </>
-        );
-      case "approved":
-        return <Approved leaves={visibleLeaves} employees={employees} />;
-      case "rejected":
-        return <Reject leaves={visibleLeaves} employees={employees} />;
-      default:
-        return (
-          <>
-            <p className="my-2">
-              Pending requests:{" "}
-              {
-                visibleLeaves.filter((leave) => leave.status === "Pending")
-                  .length
-              }
-            </p>
-            <div className="flex gap-2 my-5">
-              <button
-                variant={filter === "All" ? "primary" : "secondary"}
-                size="sm"
-                onClick={() => setFilter("All")}
-              >
-                All
-              </button>
-              <button
-                variant={filter === "Pending" ? "primary" : "secondary"}
-                size="sm"
-                onClick={() => setFilter("Pending")}
-              >
-                Pending
-              </button>
-            </div>
-            {leavesToShow.length === 0 && (
-              <EmptyState title="No leave requests found" />
-            )}
-            {leavesToShow.map((leave) => {
+  const pendingCount = visibleLeaves.filter(
+    (leave) => leave.status === "Pending",
+  ).length;
+  return (
+    <div className="min-h-screen">
+      <main className="p-[30px_20px]">
+        <div className="mx-auto w-full max-w-[680px]">
+          <p className="my-2">Pending requests: {pendingCount}</p>
+          <div className="my-5 flex gap-2">
+            <Button
+              size="sm"
+              variant={filter === "All" ? "primary" : "secondary"}
+              onClick={() => setFilter("All")}
+            >
+              All
+            </Button>
+            <Button
+              size="sm"
+              variant={filter === "Pending" ? "primary" : "secondary"}
+              onClick={() => setFilter("Pending")}
+            >
+              Pending
+            </Button>
+          </div>
+          {requests.length === 0 ? (
+            <EmptyState title="No leave requests found" />
+          ) : (
+            requests.map((leave) => {
               const employee = employees.find(
                 (person) => person.id === leave.employeeId,
               );
@@ -292,32 +320,16 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
                   key={leave.id}
                   leave={leave}
                   employee={employee}
-                  onApprove={(id) => changeLeaveStatus(id, "Approved")}
+                  canReview={canReviewLeave(leave, employee)}
+                  onApprove={(id) => updateLeaveStatus(id, "Approved")}
                   onReject={(id, reason) =>
-                    changeLeaveStatus(id, "Rejected", reason)
+                    updateLeaveStatus(id, "Rejected", reason)
                   }
                 />
               );
-            })}
-          </>
-        );
-    }
-  }
-  return (
-    <div
-      className={
-        showMenu
-          ? "flex smallest-h-screen flex-col md:flex-row"
-          : "smallest-h-screen"
-      }
-    >
-      
-      <main
-        className={
-          showMenu ? "smallest-w-0 flex-1 p-[30px_20px]" : "p-[30px_20px]"
-        }
-      >
-        <div className="mx-auto w-full maximum-w-[680px]">{showPage()}</div>
+            })
+          )}
+        </div>
       </main>
     </div>
   );

@@ -172,6 +172,7 @@ const SIDEBAR_MENU = [
           ROLES.ADMIN,
           ROLES.HR,
           ROLES.MANAGER,
+          ROLES.EMPLOYEE,
         ],
       },
 
@@ -183,6 +184,7 @@ const SIDEBAR_MENU = [
           ROLES.ADMIN,
           ROLES.HR,
           ROLES.MANAGER,
+          ROLES.EMPLOYEE,
         ],
       },
 
