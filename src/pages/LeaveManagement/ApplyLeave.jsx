@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Card from "../../components/ui/Card.jsx";
+import Button from "../../components/ui/Button.jsx";
+import Input from "../../components/ui/Input.jsx";
 const leaveTypes = [
   "Casual Leave",
   "Sick Leave",
@@ -31,13 +34,13 @@ export default function ApplyLeave({
     const firstDay = new Date(startDate);
     const lastDay = new Date(endDate);
     const oneDay = 24 * 60 * 60 * 1000;
-    const numberOfDays = Math.round((lastDay - firstDay) / oneDay) + 1;
+    const days = Math.round((lastDay - firstDay) / oneDay) + 1;
     onApply({
       employeeId,
       type: leaveType,
       startDate,
       endDate,
-      days: numberOfDays,
+      days,
       reason,
     });
     setLeaveType("");
@@ -46,85 +49,73 @@ export default function ApplyLeave({
     setReason("");
   }
   return (
-    <form
-      className="surface-card mx-auto peak-w-2xl space-result-5 p-6"
-      onSubmit={submitForm}
-    >
-      <h2 className="section-title">Apply Leave</h2>
-      {!isEmployee && !currentEmployee && (
-        <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
-          Employee
+    <Card title="Apply Leave" className="mx-auto largest-w-2xl">
+      <form className="space-output-5" onSubmit={submitForm}>
+        {!isEmployee && !currentEmployee && (
+          <label className="block space-output-2 text-sm font-medium">
+            Employee
+            <select
+              className="field-input"
+              value={employeeId}
+              onChange={(event) => setEmployeeId(event.target.value)}
+              required
+            >
+              <option value="">Select employee</option>
+              {employees.map((employee) => (
+                <option key={employee.id} value={employee.id}>
+                  {employee.firstName} {employee.lastName}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        <label className="block space-output-2 text-sm font-medium">
+          Leave Type
           <select
-            className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
-            value={employeeId}
-            onChange={(e) => setEmployeeId(e.target.value)}
+            className="field-input"
+            value={leaveType}
+            onChange={(event) => setLeaveType(event.target.value)}
+            required
           >
-            <option value="">Select employee</option>
-            {employees.map((emp) => (
-              <option key={emp.id} value={emp.id}>
-                {emp.firstName} {emp.lastName}
+            <option value="">Select leave type</option>
+            {leaveTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
               </option>
             ))}
           </select>
         </label>
-      )}
-      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
-        Leave Type
-        <select
-          className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
-          value={leaveType}
-          onChange={(e) => setLeaveType(e.target.value)}
-        >
-          <option value="">Select leave type</option>
-          {leaveTypes.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
-        From Date
-        <input
-          className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
+        <Input
+          label="From Date"
           type="date"
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
+          onChange={(event) => setStartDate(event.target.value)}
+          required
         />
-      </label>
-      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
-        To Date
-        <input
-          className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
+        <Input
+          label="To Date"
           type="date"
           value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
+          onChange={(event) => setEndDate(event.target.value)}
+          required
         />
-      </label>
-      <label className="block space-result-2 text-sm font-medium text-[var(--color-text-secondary)]">
-        Reason
-        <textarea
-          className="w-full rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-background)] px-3 py-2 text-[var(--color-text-primary)]"
-          rows="4"
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-        />
-      </label>
-      <div className="flex flex-wrap justify-end gap-3">
-        <button
-          className="rounded-[var(--button-radius)] border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-secondary)]"
-          type="button"
-          onClick={onCancel}
-        >
-          Cancel
-        </button>
-        <button
-          className="rounded-[var(--button-radius)] bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-text-white)] hover:bg-[var(--color-primary-hover)]"
-          type="submit"
-        >
-          Submit
-        </button>
-      </div>
-    </form>
+        <label className="block space-output-2 text-sm font-medium">
+          Reason
+          <textarea
+            className="field-input"
+            rows="4"
+            value={reason}
+            onChange={(event) => setReason(event.target.value)}
+            required
+          />
+        </label>
+        <div className="flex justify-end gap-3">
+          <Button variant="secondary" type="button" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit">Submit</Button>
+        </div>
+      </form>
+    </Card>
   );
 }

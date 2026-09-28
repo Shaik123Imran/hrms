@@ -1,60 +1,57 @@
+import Card from "../../components/ui/Card.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 function getEmployeeName(employee) {
   if (!employee) {
     return "Unknown employee";
   }
   return `${employee.firstName} ${employee.lastName}`;
 }
-function getDepartment(employee) {
-  if (employee) {
-    return employee.department;
-  }
-  return "Not available";
-}
 export default function Reject({ leaves, employees }) {
   const rejectedLeaves = leaves.filter((leave) => leave.status === "Rejected");
   return (
-    <section className="space-output-4">
+    <section className="space-result-4">
       <div>
         <h2 className="section-title">Rejected Leave Requests</h2>
         <p className="mt-1 text-sm text-muted">
           Leave for the following employees has been rejected
         </p>
       </div>
-      {!rejectedLeaves.length && (
-        <p className="empty surface-card rounded-[var(--card-radius)]">
-          There are no rejected requests.
-        </p>
+      {rejectedLeaves.length === 0 && (
+        <EmptyState title="There are no rejected requests." />
       )}
       {rejectedLeaves.map((leave) => {
         const employee = employees.find(
           (person) => person.id === leave.employeeId,
         );
-        const name = getEmployeeName(employee);
-        const department = getDepartment(employee);
-        const reason = leave.rejectionReason || "No reason provided";
         return (
-          <article key={leave.id} className="surface-card space-output-2 p-5">
-            <h3 className="text-base font-semibold">{name}</h3>
-            <p className="text-sm text-secondary">
-              <strong>Department:</strong> {department}
+          <Card
+            key={leave.id}
+            title={getEmployeeName(employee)}
+            className="mb-4"
+            bodyClassName="space-result-2"
+          >
+            <p>
+              <strong>Department:</strong>{" "}
+              {employee?.department || "Not available"}
             </p>
-            <p className="text-sm text-secondary">
+            <p>
               <strong>Leave Type:</strong> {leave.type}
             </p>
-            <p className="text-sm text-secondary">
+            <p>
               <strong>Dates:</strong> {leave.startDate} to {leave.endDate}
             </p>
-            <p className="text-sm text-secondary">
+            <p>
               <strong>Days:</strong> {leave.days}
             </p>
-            <p className="text-sm text-secondary">
+            <p>
               <strong>Status:</strong>{" "}
               <span className="badge badge-error">Rejected</span>
             </p>
-            <p className="text-sm text-secondary">
-              <strong>Reason:</strong> {reason}
+            <p>
+              <strong>Reason:</strong>{" "}
+              {leave.rejectionReason || "No reason provided"}
             </p>
-          </article>
+          </Card>
         );
       })}
     </section>

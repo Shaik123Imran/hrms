@@ -5,19 +5,10 @@ import ApplyLeave from "./ApplyLeave.jsx";
 import Approved from "./Approved.jsx";
 import Reject from "./Reject.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
+import Card from "../../components/ui/Card.jsx";
+import Button from "../../components/ui/Button.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 const storageKey = "hrms_leave_data";
-const navButtonClass =
-  "block w-full mb-2 p-3 border-0 bg-transparent text-left text-sm text-[color:var(--color-text-primary)] hover:bg-[color:var(--color-border-dark)]";
-const cardClass =
-  "mb-4 p-5 border border-[color:var(--color-border)] rounded-lg bg-[color:var(--color-surface)]";
-const buttonBase = "px-[13px] py-2 border rounded-[5px] font-medium";
-const buttonNeutral = `${buttonBase} border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-text-primary)]`;
-const buttonApprove = `${buttonBase} border-[color:var(--leave-approved)] bg-[color:var(--leave-approved)] text-white`;
-const buttonReject = `${buttonBase} border-[color:var(--leave-rejected)] bg-[color:var(--leave-rejected)] text-white`;
-const filterIdle =
-  "px-3.5 py-2 border border-[color:var(--color-border)] rounded-[5px] bg-[color:var(--color-surface)]";
-const filterActive =
-  "px-3.5 py-2 border border-[color:var(--color-primary)] rounded-[5px] bg-[color:var(--color-primary)] text-white";
 const statusApproved =
   "badge bg-[color:var(--color-success-light)] text-[color:var(--leave-approved)]";
 const statusPending =
@@ -69,25 +60,24 @@ function LeaveCard({ leave, employee, onApprove, onReject, canManage = true }) {
     setShowRejectBox(false);
   }
   return (
-    <article className={cardClass}>
-      <h3 className="mb-2.5 text-[13px] font-normal">{employeeName}</h3>
-      <p className="my-[9px]">
+    <Card title={employeeName} className="mb-4" bodyClassName="space-result-2">
+      <p>
         <strong>Department:</strong> {department}
       </p>
-      <p className="my-[9px]">
+      <p>
         <strong>Leave Type:</strong> {leave.type}
       </p>
-      <p className="my-[9px]">
+      <p>
         <strong>Dates:</strong> {leave.startDate} to {leave.endDate}
       </p>
-      <p className="my-[9px]">
+      <p>
         <strong>Days:</strong> {leave.days}
       </p>
-      <p className="my-[9px]">
+      <p>
         <strong>Status:</strong> <Status status={leave.status} />
       </p>
       {showDetails && (
-        <div className="mt-3 space-result-3">
+        <div className="space-result-3">
           <p>
             <strong>Reason:</strong> {leave.reason}
           </p>
@@ -98,51 +88,51 @@ function LeaveCard({ leave, employee, onApprove, onReject, canManage = true }) {
           )}
         </div>
       )}
-      <div className="flex flex-wrap gap-2 mt-[18px]">
-        <button
-          className={buttonNeutral}
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant="secondary"
+          size="sm"
           onClick={() => setShowDetails(!showDetails)}
         >
           {showDetails ? "Hide Details" : "View Details"}
-        </button>
+        </Button>
         {canManage && leave.status === "Pending" && (
           <>
-            <button
-              className={buttonApprove}
-              onClick={() => onApprove(leave.id)}
-            >
+            <Button size="sm" onClick={() => onApprove(leave.id)}>
               Approve
-            </button>
-            <button
-              className={buttonReject}
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
               onClick={() => setShowRejectBox(true)}
             >
               Reject
-            </button>
+            </Button>
           </>
         )}
       </div>
       {showRejectBox && (
-        <div className="flex flex-wrap gap-2 w-full mt-2.5">
+        <div className="flex w-full flex-wrap gap-2">
           <textarea
-            className="w-full lowest-w-[240px] p-2.5 border border-[color:var(--color-border-dark)] rounded-[5px] bg-[color:var(--color-surface)]"
+            className="field-input w-full smallest-w-[240px]"
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             placeholder="Write rejection reason"
             rows="3"
           />
-          <button className={buttonReject} onClick={confirmReject}>
+          <Button variant="danger" size="sm" onClick={confirmReject}>
             Confirm Reject
-          </button>
-          <button
-            className={buttonNeutral}
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => setShowRejectBox(false)}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       )}
-    </article>
+    </Card>
   );
 }
 export default function LeaveRequests({ page = "requests", showMenu = true }) {
@@ -223,10 +213,10 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
         return (
           <>
             {isEmployee && !currentEmployee ? (
-              <p className="surface-card rounded-[var(--card-radius)] p-5">
-                This account is not linked to an employee record yet. Ask the
-                login or data team to add this account&apos;s employee ID.
-              </p>
+              <EmptyState
+                title="Employee account not linked"
+                description="Ask the login or data team to connect this account to an employee ID."
+              />
             ) : (
               <ApplyLeave
                 employees={employees}
@@ -246,9 +236,7 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
               <section className="mt-6">
                 <h2 className="section-title mb-4">My Leave Requests</h2>
                 {visibleLeaves.length === 0 && (
-                  <p className="text-muted">
-                    You have not applied for leave yet.
-                  </p>
+                  <EmptyState title="No leave requests yet" />
                 )}
                 {visibleLeaves.map((leave) => (
                   <LeaveCard
@@ -280,20 +268,22 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
             </p>
             <div className="flex gap-2 my-5">
               <button
-                className={filter === "All" ? filterActive : filterIdle}
+                variant={filter === "All" ? "primary" : "secondary"}
+                size="sm"
                 onClick={() => setFilter("All")}
               >
                 All
               </button>
               <button
-                className={filter === "Pending" ? filterActive : filterIdle}
+                variant={filter === "Pending" ? "primary" : "secondary"}
+                size="sm"
                 onClick={() => setFilter("Pending")}
               >
                 Pending
               </button>
             </div>
             {leavesToShow.length === 0 && (
-              <p className="text-muted">No leave requests found.</p>
+              <EmptyState title="No leave requests found" />
             )}
             {leavesToShow.map((leave) => {
               const employee = employees.find(
@@ -319,47 +309,51 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
     <div
       className={
         showMenu
-          ? "flex flex-col lowest-h-screen md:flex-row"
-          : "lowest-h-screen"
+          ? "flex smallest-h-screen flex-col md:flex-row"
+          : "smallest-h-screen"
       }
     >
       {showMenu && (
-        <aside className="w-full md:w-[200px] md:lowest-w-[200px] p-[25px_18px] bg-[color:var(--color-secondary-light)] md:border-r border-[color:var(--color-border)]">
+        <aside className="w-full border-[color:var(--color-border)] bg-[color:var(--color-secondary-light)] p-[25px_18px] md:w-[200px] md:smallest-w-[200px] md:border-r">
           <h1 className="mb-6 text-sm font-normal">Leave Management</h1>
           {canManage && (
-            <button
-              className={navButtonClass}
+            <Button
+              variant="ghost"
+              className="mb-2 w-full justify-start text-left"
               onClick={() => setCurrentPage("requests")}
             >
               Leave Requests
-            </button>
+            </Button>
           )}
-          <button
-            className={navButtonClass}
+          <Button
+            variant="ghost"
+            className="mb-2 w-full justify-start text-left"
             onClick={() => setCurrentPage("apply")}
           >
             Apply Leave
-          </button>
-          <button
-            className={navButtonClass}
+          </Button>
+          <Button
+            variant="ghost"
+            className="mb-2 w-full justify-start text-left"
             onClick={() => setCurrentPage("approved")}
           >
             Approved
-          </button>
-          <button
-            className={navButtonClass}
+          </Button>
+          <Button
+            variant="ghost"
+            className="mb-2 w-full justify-start text-left"
             onClick={() => setCurrentPage("rejected")}
           >
             Rejected
-          </button>
+          </Button>
         </aside>
       )}
       <main
         className={
-          showMenu ? "flex-1 lowest-w-0 p-[30px_20px]" : "p-[30px_20px]"
+          showMenu ? "smallest-w-0 flex-1 p-[30px_20px]" : "p-[30px_20px]"
         }
       >
-        <div className="w-[680px] peak-w-full mx-auto">{showPage()}</div>
+        <div className="mx-auto w-full maximum-w-[680px]">{showPage()}</div>
       </main>
     </div>
   );
