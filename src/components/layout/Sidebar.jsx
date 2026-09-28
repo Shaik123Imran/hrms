@@ -75,18 +75,8 @@ const SIDEBAR_MENU = [
       },
 
       {
-        label: "Employee Form",
-        path: "/employee/form",
-        icon: UserRound,
-        roles: [
-          ROLES.ADMIN,
-          ROLES.HR,
-        ],
-      },
-
-      {
         label: "Employee List",
-        path: "/employee/list",
+        path: "/employee-list",
         icon: Users,
         roles: [
           ROLES.ADMIN,
@@ -101,9 +91,17 @@ const SIDEBAR_MENU = [
         icon: UserRound,
         roles: [
           ROLES.ADMIN,
-          ROLES.HR,
           ROLES.MANAGER,
           ROLES.EMPLOYEE,
+        ],
+      },
+
+      {
+        label: "HR Profile",
+        path: "/HRProfile",
+        icon: UserRound,
+        roles: [
+          ROLES.HR,
         ],
       },
 

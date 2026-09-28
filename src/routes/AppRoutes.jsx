@@ -53,17 +53,10 @@ export default function AppRoutes() {
         }
       />
 
-      <Route
-        path="/EmployeeForm"
-        element={
-          <DashboardLayout title="Employee Form">
-            <EmployeeForm />
-          </DashboardLayout>
-        }
-      />
+      
 
       <Route
-        path="/EmployeeList"
+        path="/employee-list"
         element={
           <DashboardLayout title="Employee List">
             <EmployeeList />
@@ -72,7 +65,7 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/EmployeeProfile"
+        path="/employee/profile/*"
         element={
           <DashboardLayout title="Employee Profile">
             <EmployeeProfile />
@@ -80,7 +73,7 @@ export default function AppRoutes() {
         }
       />
       <Route
-        path="/HRProfile"
+        path="/HRProfile/*"
         element={
           <DashboardLayout title="HR Profile">
             <HRProfile />
@@ -97,14 +90,7 @@ export default function AppRoutes() {
         }
       />
 
-      <Route
-        path="/leave"
-        element={
-          <DashboardLayout title="Leave Management">
-            <Navigate to="/leave/requests" replace />
-          </DashboardLayout>
-        }
-      />
+    
 
       <Route
         path="/leave/requests"

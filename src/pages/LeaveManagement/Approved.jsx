@@ -6,7 +6,7 @@ function getEmployeeName(employee) {
   }
   return `${employee.firstName} ${employee.lastName}`;
 }
-export default function Approved({ leaves, employees }) {
+export default function Approved({ leaves = [] , employees = [] }) {
   const approvedLeaves = leaves.filter((leave) => leave.status === "Approved");
   return (
     <section className="space-buffer-4">

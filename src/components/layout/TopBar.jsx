@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Menu, Bell, ChevronDown, LogOut } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -6,6 +7,7 @@ export default function TopBar({ title = "Dashboard", onMenuClick }) {
   const [showMenu, setShowMenu] = useState(false);
 
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const userName = user?.name || user?.firstName || "User";
   const userRole = user?.role || "Employee";
@@ -14,6 +16,7 @@ export default function TopBar({ title = "Dashboard", onMenuClick }) {
   const handleLogout = () => {
     setShowMenu(false);
     logout();
+    navigate("/login", { replace: true });
   };
 
   return (

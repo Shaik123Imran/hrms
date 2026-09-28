@@ -374,7 +374,7 @@ export default function EmployeeList() {
             aria-label={`Edit ${employee.firstName} ${employee.lastName}`}
             onClick={() =>
               navigate(
-                `/employees/${employee.id}/edit`
+                `/employee/edit`
               )
             }
           >
@@ -412,7 +412,7 @@ export default function EmployeeList() {
 
         <Button
           onClick={() =>
-            navigate("/employees/new")
+            navigate("/employee/add")
           }
           icon={Plus}
         >

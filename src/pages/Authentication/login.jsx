@@ -81,7 +81,7 @@ function Login() {
             <div className="flex flex-col gap-4">
 
               <Input
-                label="Email"
+                label="Email: "
                 type="email"
                 placeholder="Enter email"
                 value={username}
@@ -89,7 +89,7 @@ function Login() {
               />
 
               <Input
-                label="Password"
+                label="Password: "
                 type="password"
                 placeholder="Enter password"
                 value={password}
@@ -97,7 +97,7 @@ function Login() {
               />
 
               <div>
-                <label className="field-label">Role</label>
+                <label className="field-label">Role </label>
 
                 <select
                   className="field-input"

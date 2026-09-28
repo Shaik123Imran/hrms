@@ -5,9 +5,9 @@ export default function DashboardLayout({ children, title }) {
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar />
-      <div className="flex-1 min-w-0">
+      <div className="ml-[280px] w-[calc(100%-280px)] min-h-screen">
         <TopBar title={title} />
-        <main classNam="w-full min-w-0 overflow-x-hidden">
+        <main className="w-full overflow-x-hidden p-4 md:p-6">
           {children}
         </main>
       </div>

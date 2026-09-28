@@ -10,11 +10,11 @@ const leaveTypes = [
   "Work From Home",
 ];
 export default function ApplyLeave({
-  employees,
-  onApply,
-  onCancel,
-  isEmployee,
-  currentEmployee,
+  employees = [],
+  onApply = () => {},
+  onCancel = () => {},
+  isEmployee = false,
+  currentEmployee = null,
 }) {
   const [employeeId, setEmployeeId] = useState(currentEmployee?.id || "");
   const [leaveType, setLeaveType] = useState("");

@@ -257,8 +257,6 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
       default:
         return (
           <>
-            <h2 className="mb-[6px] text-[13px] font-normal">Leave Requests</h2>
-            <p className="my-2">For managing employee leave requests</p>
             <p className="my-2">
               Pending requests:{" "}
               {
@@ -313,41 +311,7 @@ export default function LeaveRequests({ page = "requests", showMenu = true }) {
           : "smallest-h-screen"
       }
     >
-      {showMenu && (
-        <aside className="w-full border-[color:var(--color-border)] bg-[color:var(--color-secondary-light)] p-[25px_18px] md:w-[200px] md:smallest-w-[200px] md:border-r">
-          <h1 className="mb-6 text-sm font-normal">Leave Management</h1>
-          {canManage && (
-            <Button
-              variant="ghost"
-              className="mb-2 w-full justify-start text-left"
-              onClick={() => setCurrentPage("requests")}
-            >
-              Leave Requests
-            </Button>
-          )}
-          <Button
-            variant="ghost"
-            className="mb-2 w-full justify-start text-left"
-            onClick={() => setCurrentPage("apply")}
-          >
-            Apply Leave
-          </Button>
-          <Button
-            variant="ghost"
-            className="mb-2 w-full justify-start text-left"
-            onClick={() => setCurrentPage("approved")}
-          >
-            Approved
-          </Button>
-          <Button
-            variant="ghost"
-            className="mb-2 w-full justify-start text-left"
-            onClick={() => setCurrentPage("rejected")}
-          >
-            Rejected
-          </Button>
-        </aside>
-      )}
+      
       <main
         className={
           showMenu ? "smallest-w-0 flex-1 p-[30px_20px]" : "p-[30px_20px]"
