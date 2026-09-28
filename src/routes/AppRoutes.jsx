@@ -1,21 +1,30 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "../pages/Authentication/login";
 import Dashboard from "../pages/Dashboard/Dashboard";
+
 import AddEmployee from "../pages/EmployeeForm/AddEmployee";
 import EditEmployee from "../pages/EmployeeForm/EditEmployee";
 import EmployeeForm from "../pages/EmployeeForm/EmployeeForm";
+
 import EmployeeList from "../pages/EmployeeList/EmployeeList";
 import EmployeeProfile from "../pages/EmployeeProfile/EmployeeProfile";
 import HRProfile from "../pages/EmployeeProfile/HRProfile";
+
 import Attendance from "../pages/Attendance/Attendance";
+
 import ApplyLeave from "../pages/LeaveManagement/ApplyLeave";
 import Approved from "../pages/LeaveManagement/Approved";
 import LeaveRequests from "../pages/LeaveManagement/LeaveRequests";
 import Reject from "../pages/LeaveManagement/Reject";
-import DashboardLayout from "../src/layouts/DashboardLayout";
+import ProtectedRoute from "./ProtectedRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
 
-function AppRoutes() {
+export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/login" 
+      element={<Login />
+      }/>
 
       <Route
         path="/dashboard"
@@ -137,7 +146,7 @@ function AppRoutes() {
         path="*"
         element={
           <Navigate
-            to="/dashboard"
+            to="/login"
             replace
           />
         }
@@ -145,5 +154,3 @@ function AppRoutes() {
     </Routes>
   );
 }
-
-export default AppRoutes;

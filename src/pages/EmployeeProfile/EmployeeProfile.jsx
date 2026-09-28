@@ -1,8 +1,6 @@
 
 import { useState } from "react";
 import { NavLink, Routes, Route, Navigate } from "react-router-dom";
-import "../../style/tokens.css";
-import "../../style/global.css";
 import employeeData from "../../data/data.json";
 import EmployeeOverview from "../../components/employee/profile/EmployeeOverview.jsx";
 import Personal from "../../components/employee/profile/Personal.jsx";
