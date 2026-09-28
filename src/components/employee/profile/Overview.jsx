@@ -17,9 +17,6 @@ const Overview = ({
   return (
     <div className="space-y-6">
 
-      {/* =========================
-          OVERVIEW HEADER
-      ========================== */}
       <div>
         <h2 className="text-xl font-semibold text-gray-900">
           Overview
@@ -31,9 +28,6 @@ const Overview = ({
         </p>
       </div>
 
-      {/* =========================
-          ATTENDANCE
-      ========================== */}
       <Attendance
         hrData={hrData}
         employees={employees}
