@@ -153,9 +153,6 @@ const Recruitment = () => {
 };
 
 
-/* =========================
-   RECRUITMENT CARD
-========================= */
 
 const RecruitmentCard = ({ title, value }) => {
   return (
