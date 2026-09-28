@@ -131,7 +131,7 @@ const Attendance = ({
 
       </div>
 
-      // Employee Attendance 
+      {/* Employee Attendance */}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
 
         <div className="border-b border-gray-200 px-6 py-4">
@@ -171,7 +171,9 @@ const Attendance = ({
 };
 
 
-// Attendence Card
+/* =========================
+   ATTENDANCE CARD
+========================= */
 
 const AttendanceCard = ({
   title,
@@ -198,7 +200,9 @@ const AttendanceCard = ({
 };
 
 
-// Employee Attendence 
+/* =========================
+   EMPLOYEE ATTENDANCE
+========================= */
 
 const EmployeeAttendance = ({
   employee,
