@@ -32,7 +32,7 @@ const EmployeeProfile = () => {
   return (
     <div className="page-container">
 
-      {/* Employee Profile Navigation */}
+
       <div className="surface-card">
 
         <nav className="flex gap-6">
@@ -96,23 +96,12 @@ const EmployeeProfile = () => {
 
       </div>
 
-      {/* Profile Content */}
       <main className="mt-6">
 
         <Routes>
 
-          {/* Default page */}
-          <Route
-            index
-            element={
-              <Navigate
-                to="overview"
-                replace
-              />
-            }
-          />
+          <Route index element={ <Navigate to="overview" replace /> } />
 
-          {/* Overview */}
           <Route
             path="overview"
             element={
@@ -123,37 +112,13 @@ const EmployeeProfile = () => {
             }
           />
 
-          {/* Personal */}
-          <Route
-            path="personal"
-            element={
-              <Personal hrData={employee} />
-            }
-          />
+          <Route path="personal" element={ <Personal hrData={employee} /> } />
 
-          {/* Employment */}
-          <Route
-            path="employment"
-            element={
-              <Employment hrData={employee} />
-            }
-          />
+          <Route path="employment" element={ <Employment hrData={employee} /> } />
 
-          {/* Performance */}
-          <Route
-            path="performance"
-            element={
-              <Performance hrData={employee} />
-            }
-          />
+          <Route path="performance" element={ <Performance hrData={employee} /> } />
 
-          {/* Documents */}
-          <Route
-            path="documents"
-            element={
-              <Documents hrData={employee} />
-            }
-          />
+          <Route path="documents" element={ <Documents hrData={employee} /> } />
 
         </Routes>
 
