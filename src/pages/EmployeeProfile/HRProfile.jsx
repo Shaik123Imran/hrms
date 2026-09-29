@@ -38,16 +38,7 @@ const HRProfile = () => {
 
         <nav className="flex gap-6">
 
-          <NavLink
-            to="/HRProfile/overview"
-            className={({ isActive }) =>
-              isActive
-                ? "nav-link active"
-                : "nav-link"
-            }
-          >
-            Overview
-          </NavLink>
+         
 
           <NavLink
             to="/HRProfile/personal"
@@ -114,15 +105,7 @@ const HRProfile = () => {
         <Routes>
 
           {/* Default route */}
-          <Route
-            index
-            element={
-              <Navigate
-                to="overview"
-                replace
-              />
-            }
-          />
+
 
           {/* Overview */}
           <Route
