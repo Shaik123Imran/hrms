@@ -1,9 +1,7 @@
-
-import { useState } from "react";
 import { NavLink, Routes, Route, Navigate } from "react-router-dom";
-import "../../style/tokens.css";
-import "../../style/global.css";
+
 import employeeData from "../../data/data.json";
+
 import EmployeeOverview from "../../components/employee/profile/EmployeeOverview.jsx";
 import Personal from "../../components/employee/profile/Personal.jsx";
 import Employment from "../../components/employee/profile/JobDetails.jsx";
@@ -11,21 +9,22 @@ import Performance from "../../components/employee/profile/Performance.jsx";
 import Documents from "../../components/employee/profile/Documents.jsx";
 
 const EmployeeProfile = () => {
-  const [isCheckedIn, setIsCheckedIn] = useState(false);
 
   // Get all employees from data.json
   const employees = employeeData?.employees || [];
 
-  // Current employee
-  const hrData = employees.find(
+  // Get current employee
+  const employee = employees.find(
     (employee) => employee.id === "e1"
   );
 
   // If employee is not found
-  if (!hrData) {
+  if (!employee) {
     return (
       <div className="page-container">
-        <p className="text-error">Employee data not found.</p>
+        <p className="text-error">
+          Employee data not found.
+        </p>
       </div>
     );
   }
@@ -33,78 +32,128 @@ const EmployeeProfile = () => {
   return (
     <div className="page-container">
 
-
-      <div className="page-header">
-
-        {/* EMPLOYEE DETAILS */}
-        <div>
-          <h1 className="page-title">
-            {hrData.firstName} {hrData.lastName}
-          </h1>
-
-          <p className="text-muted">
-            {hrData.designation} • {hrData.department}
-          </p>
-        </div>
-
-        {/* ACTION BUTTONS */}
-        <div className="flex items-center gap-3">
-
-          {/* CHECK IN / CHECK OUT */}
-          <button
-            type="button"
-            onClick={() => setIsCheckedIn((previous) => !previous)}
-            className={
-              isCheckedIn
-                ? "btn btn-danger"
-                : "btn btn-success"
-            }
-          >
-            {isCheckedIn ? "Check Out" : "Check In"}
-          </button>
-
-          <button type="button" className="btn btn-logout">
-            Logout
-          </button>
-
-        </div>
-
-      </div>
-
-
+      {/* Employee Profile Navigation */}
       <div className="surface-card">
 
         <nav className="flex gap-6">
 
-          <NavLink to="/emp/overview" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Overview</NavLink>
+          <NavLink
+            to="/employee/profile/overview"
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link active"
+                : "nav-link"
+            }
+          >
+            Overview
+          </NavLink>
 
-          <NavLink to="/emp/personal" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Personal</NavLink>
+          <NavLink
+            to="/employee/profile/personal"
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link active"
+                : "nav-link"
+            }
+          >
+            Personal
+          </NavLink>
 
-          <NavLink to="/emp/employment" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Employment</NavLink>
+          <NavLink
+            to="/employee/profile/employment"
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link active"
+                : "nav-link"
+            }
+          >
+            Employment
+          </NavLink>
 
-          <NavLink to="/emp/performance" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Performance</NavLink>
+          <NavLink
+            to="/employee/profile/performance"
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link active"
+                : "nav-link"
+            }
+          >
+            Performance
+          </NavLink>
 
-          <NavLink to="/emp/documents" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Documents</NavLink>
+          <NavLink
+            to="/employee/profile/documents"
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link active"
+                : "nav-link"
+            }
+          >
+            Documents
+          </NavLink>
 
         </nav>
 
       </div>
 
-      <main>
+      {/* Profile Content */}
+      <main className="mt-6">
 
         <Routes>
 
-          <Route index element={<Navigate to="overview" replace />} />
+          {/* Default page */}
+          <Route
+            index
+            element={
+              <Navigate
+                to="overview"
+                replace
+              />
+            }
+          />
 
-          <Route path="overview" element={<EmployeeOverview hrData={hrData} attendance={employeeData?.attendance || []} />} />
+          {/* Overview */}
+          <Route
+            path="overview"
+            element={
+              <EmployeeOverview
+                hrData={employee}
+                attendance={employeeData?.attendance || []}
+              />
+            }
+          />
 
-          <Route path="personal" element={<Personal hrData={hrData} />} />
+          {/* Personal */}
+          <Route
+            path="personal"
+            element={
+              <Personal hrData={employee} />
+            }
+          />
 
-          <Route path="employment" element={<Employment hrData={hrData} />} />
+          {/* Employment */}
+          <Route
+            path="employment"
+            element={
+              <Employment hrData={employee} />
+            }
+          />
 
-          <Route path="performance" element={<Performance hrData={hrData} />} />
+          {/* Performance */}
+          <Route
+            path="performance"
+            element={
+              <Performance hrData={employee} />
+            }
+          />
 
-          <Route path="documents" element={<Documents hrData={hrData} />} />
+          {/* Documents */}
+          <Route
+            path="documents"
+            element={
+              <Documents hrData={employee} />
+            }
+          />
 
         </Routes>
 
