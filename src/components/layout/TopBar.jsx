@@ -9,6 +9,15 @@ export default function TopBar({ title = "Dashboard", onMenuClick }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const handleProfile = () => {
+  setShowMenu(false);
+  if (userRole === "HR") {
+    navigate("/HRProfile/");
+  } else {
+    navigate("/employee/profile/");
+  }
+};
+
   const userName = user?.name || user?.firstName || "User";
   const userRole = user?.role || "Employee";
   const initial = userName.charAt(0).toUpperCase();
@@ -72,7 +81,7 @@ export default function TopBar({ title = "Dashboard", onMenuClick }) {
 
               <button
                 className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
-                onClick={() => setShowMenu(false)}>
+                onClick={handleProfile}>
 
                 My Profile
               </button>

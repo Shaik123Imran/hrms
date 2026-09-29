@@ -210,7 +210,7 @@
   --card-background: var(--color-surface);
   --card-border: var(--color-border);
   --card-radius: var(--radius-xl);
-  --card-padding: var(--card-padding);
+  --card-padding: 20px;
   --card-shadow: var(--shadow-sm);
 
 /* TABLE */

@@ -76,6 +76,7 @@ function Login() {
           title="HRMS Login"
           subtitle="Human Resource Management System"
           className="w-full max-w-md"
+          centerHeader={true}
         >
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
@@ -118,7 +119,7 @@ function Login() {
                 </p>
               )}
 
-              <Button type="submit" className="w-full">
+              <Button variant="primary" type="submit" className="w-full">
                 Login
               </Button>
 

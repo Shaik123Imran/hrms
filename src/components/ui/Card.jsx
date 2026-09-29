@@ -5,13 +5,14 @@ export default function Card({
   children,
   className = '',
   bodyClassName = '',
+  centerHeader = false,
 }) {
   return (
     <section className={`surface-card animate-in ${className}`}>
       
     {(title || subtitle || action) && (
     <header className="flex items-center justify-between gap-3 border-b border-ink-100 px-5 py-4">
-        <div>
+        <div className={centerHeader ? 'flex-1 text-center' : 'flex-1'}>
             {title && (
                 <h3 className="text-sm font-semibold text-ink-800">
                     {title}
