@@ -45,7 +45,7 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/employee/edit"
+        path={`/employees/:employeeId`}
         element={
           <DashboardLayout title="Edit Employee">
             <EditEmployee />

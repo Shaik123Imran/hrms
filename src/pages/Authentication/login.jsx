@@ -75,7 +75,7 @@ function Login() {
         <Card
           title="HRMS Login"
           subtitle="Human Resource Management System"
-          className="w-full max-w-md"
+          className="w-full max-w-sm"
           centerHeader={true}
         >
           <form onSubmit={handleSubmit}>

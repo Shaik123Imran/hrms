@@ -65,16 +65,6 @@ const SIDEBAR_MENU = [
       },
 
       {
-        label: "Edit Employee",
-        path: "/employee/edit",
-        icon: UserPen,
-        roles: [
-          ROLES.ADMIN,
-          ROLES.HR,
-        ],
-      },
-
-      {
         label: "Employee List",
         path: "/employee-list",
         icon: Users,
@@ -172,6 +162,7 @@ const SIDEBAR_MENU = [
           ROLES.ADMIN,
           ROLES.HR,
           ROLES.MANAGER,
+          ROLES.EMPLOYEE,
         ],
       },
 
@@ -183,6 +174,7 @@ const SIDEBAR_MENU = [
           ROLES.ADMIN,
           ROLES.HR,
           ROLES.MANAGER,
+          ROLES.EMPLOYEE,
         ],
       },
 

@@ -374,7 +374,7 @@ export default function EmployeeList() {
             aria-label={`Edit ${employee.firstName} ${employee.lastName}`}
             onClick={() =>
               navigate(
-                `/employee/edit`
+                `/employees/${employee.id}`
               )
             }
           >
