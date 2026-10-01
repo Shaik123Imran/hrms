@@ -6,8 +6,6 @@ import Card from "../../components/ui/Card.jsx";
 import Button from "../../components/ui/Button.jsx";
 import Input from "../../components/ui/Input.jsx";
 
-import data from "../../data/data.json";
-
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -17,7 +15,7 @@ function Login() {
   const [role, setRole] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!username) {
@@ -35,32 +33,14 @@ function Login() {
       return;
     }
 
-    const user = data.users.find(
-      (user) =>
-        user.email === username &&
-        user.password === password &&
-        user.role === role
-    );
-
-    if (user) {
-      setError("");
-
-      // Store user in AuthContext
-      login(user);
-
-      // Store user in cookie
-      document.cookie = `loggedInUser=${encodeURIComponent(
-        JSON.stringify(user)
-      )}; max-age=3600; path=/`;
-
-      // Go to the common dashboard
-      navigate("/dashboard");
-
-      return;
-    }
-
-    setError("Invalid email, password, or role");
-  };
+const success = await login(username, password, role);
+if (success) {
+  setError("");
+  navigate("/dashboard");
+} else {
+  setError("Invalid email, password, or role");
+}
+};
 
   return (
     <div className="page-container">

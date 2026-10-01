@@ -58,6 +58,31 @@ export async function fetchDesignations() {
 export async function fetchAttendance() {
   return delay(readDb().attendance);
 }
+export async function saveAttendance(attendance) {
+  const db = readDb();
+
+  const existingIndex = db.attendance.findIndex(
+    (record) =>
+      record.employeeId === attendance.employeeId &&
+      record.date === attendance.date
+  );
+
+  if (existingIndex >= 0) {
+    db.attendance[existingIndex] = {
+      ...db.attendance[existingIndex],
+      ...attendance,
+    };
+  } else {
+    db.attendance.push({
+      id: nextEntityId(db, 'attendance', 'att'),
+      ...attendance,
+    });
+  }
+
+  writeDb(db);
+
+  return delay(db.attendance);
+}
 
 export async function fetchLeaves() {
   return delay(readDb().leaves);
@@ -276,7 +301,7 @@ export async function fetchTeamDashboardData(managerId) {
   });
 }
 
-const ORG_VIEW_ROLES = ['Admin', 'HR Manager'];
+const ORG_VIEW_ROLES = ['Admin', 'HR'];
 
 export async function fetchDashboardForUser(user) {
   if (!user) return null;
@@ -347,7 +372,8 @@ export async function login(email, password, demoRole) {
   const user = db.users.find(
     (item) =>
       item.email.toLowerCase() === String(email).toLowerCase() &&
-      item.password === password
+      item.password === password &&
+      item.role === role
   );
 
   let session;
@@ -361,7 +387,7 @@ export async function login(email, password, demoRole) {
     };
   } else if (demoRole) {
     const DEMO_ROLE_MAP = {
-      hr: { role: 'HR Manager', employeeId: null },
+      hr: { role: 'HR', employeeId: null },
       manager: { role: 'Manager', employeeId: 'e4' },
       employee: { role: 'Employee', employeeId: 'e1' },
     };
