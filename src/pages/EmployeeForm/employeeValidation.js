@@ -101,6 +101,12 @@ export function validateEmployee(formData) {
       errors.zip = employeeErrors.invalidZip;
     }
   }
+    if (formData.skills.trim() === "") {
+    errors.skills = employeeErrors.skillsRequired;
+  }
 
+  if (!formData.documents || formData.documents.length === 0) {
+    errors.documents = employeeErrors.documentsRequired;
+  }
   return errors;
 }

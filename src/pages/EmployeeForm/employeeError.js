@@ -35,5 +35,9 @@ export const employeeErrors = {
   stateRequired: "State is required.",
 
   zipRequired: "ZIP Code is required.",
-  invalidZip: "ZIP Code must be 6 digits."
+  invalidZip: "ZIP Code must be 6 digits.",
+
+  skillsRequired: "Skills are required.",
+
+  documentsRequired: "Document is required."
 };

@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import data from "../../data/data.json";
-import Button from "../../components/ui/Button";
 import { ArrowLeft } from "lucide-react";
+import Button from "../../components/ui/Button";
+import {
+  createEmployee,
+  updateEmployee,
+  fetchDepartments,
+  fetchDesignations,
+} from "../../services/dataService";
 import { validateEmployee } from "./employeeValidation";
 
 function EmployeeForm({ mode = "add", employee }) {
@@ -13,7 +17,8 @@ function EmployeeForm({ mode = "add", employee }) {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "+91 ",
+    countryCode: "+91",
+    phone: "",
     gender: "",
     dob: "",
     address: "",
@@ -28,6 +33,7 @@ function EmployeeForm({ mode = "add", employee }) {
     salary: "",
     managerId: "",
     skills: "",
+    documents: [],
   };
 
   const getEmployeeData = () => {
@@ -36,33 +42,96 @@ function EmployeeForm({ mode = "add", employee }) {
     }
 
     return {
+      ...emptyForm,
       ...employee,
+      countryCode: employee.countryCode || "+91",
+      phone: employee.phone || "",
       skills: Array.isArray(employee.skills)
         ? employee.skills.join(", ")
         : employee.skills || "",
+      documents: Array.isArray(employee.documents)
+        ? employee.documents
+        : [],
     };
   };
 
   const [formData, setFormData] = useState(getEmployeeData());
   const [errors, setErrors] = useState({});
+  const [departments, setDepartments] = useState([]);
+  const [designations, setDesignations] = useState([]);
+  const [states, setStates] = useState([]);
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    const loadFormData = async () => {
+      try {
+        const departmentData = await fetchDepartments();
+        const designationData = await fetchDesignations();
+
+        setDepartments(departmentData);
+        setDesignations(designationData);
+
+        const statesResponse = await fetch(
+          "https://countriesnow.space/api/v0.1/countries/states",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              country: "India",
+            }),
+          }
+        );
+
+        if (!statesResponse.ok) {
+          throw new Error("Failed to fetch states");
+        }
+
+        const statesResult = await statesResponse.json();
+        setStates(statesResult.data?.states || []);
+
+        const countriesResponse = await fetch(
+          "https://countriesnow.space/api/v0.1/countries/codes"
+        );
+
+        if (!countriesResponse.ok) {
+          throw new Error("Failed to fetch country codes");
+        }
+
+        const countriesResult = await countriesResponse.json();
+        setCountries(countriesResult.data || []);
+      } catch (error) {
+        console.error("Error loading form data:", error);
+      }
+    };
+
+    loadFormData();
+  }, []);
 
   useEffect(() => {
     if (employee) {
       setFormData({
+        ...emptyForm,
         ...employee,
+        countryCode: employee.countryCode || "+91",
+        phone: employee.phone || "",
         skills: Array.isArray(employee.skills)
           ? employee.skills.join(", ")
           : employee.skills || "",
+        documents: Array.isArray(employee.documents)
+          ? employee.documents
+          : [],
       });
     }
   }, [employee]);
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value, files, type } = event.target;
 
     setFormData((currentData) => ({
       ...currentData,
-      [name]: value,
+      [name]: type === "file" ? Array.from(files) : value,
     }));
 
     setErrors((currentErrors) => ({
@@ -71,7 +140,7 @@ function EmployeeForm({ mode = "add", employee }) {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const validationErrors = validateEmployee(formData);
@@ -81,191 +150,57 @@ function EmployeeForm({ mode = "add", employee }) {
       return;
     }
 
-    const storedData = localStorage.getItem("employees");
-
-    let employees;
-
-    if (storedData) {
-      employees = JSON.parse(storedData);
-    } else {
-      employees = data.employees;
-    }
-
     const skills = formData.skills
       .split(",")
       .map((skill) => skill.trim())
       .filter((skill) => skill !== "");
 
-    if (mode === "edit") {
-      const updatedEmployees = employees.map((item) => {
-        if (item.id === formData.id) {
-          return {
-            ...formData,
-            salary: Number(formData.salary) || 0,
-            skills: skills,
-          };
-        }
+    const employeeData = {
+      ...formData,
+      salary: Number(formData.salary) || 0,
+      skills,
+    };
 
-        return item;
-      });
+    try {
+      if (mode === "edit") {
+        await updateEmployee(formData.id, employeeData);
+      } else {
+        await createEmployee(employeeData);
+      }
 
-      localStorage.setItem(
-        "employees",
-        JSON.stringify(updatedEmployees)
-      );
-    } else {
-      const newEmployee = {
-        ...formData,
-        id: `e${Date.now()}`,
-        salary: Number(formData.salary) || 0,
-        skills: skills,
-      };
-
-      const updatedEmployees = [...employees, newEmployee];
-
-      localStorage.setItem(
-        "employees",
-        JSON.stringify(updatedEmployees)
-      );
+      navigate("/employee-list");
+    } catch (error) {
+      console.error("Error saving employee:", error);
     }
-
-    navigate("/employee-list");
   };
 
-  let pageTitle;
-  let pageSubtitle;
-  let buttonText;
+  const pageTitle =
+    mode === "edit" ? "Edit Employee" : "Add Employee";
 
-  if (mode === "edit") {
-    pageTitle = "Edit Employee";
-    pageSubtitle = "Update the employee details below.";
-    buttonText = "Update Employee";
-  } else {
-    pageTitle = "Add Employee";
-    pageSubtitle = "Fill in the details to onboard a new employee.";
-    buttonText = "Save Employee";
-  }
+  const pageSubtitle =
+    mode === "edit"
+      ? "Update the employee details below."
+      : "Fill in the details to onboard a new employee.";
 
-  /* =========================
-     TOKEN BASED STYLES
-  ========================= */
-
-  const sectionStyle = {
-    background: "var(--card-background)",
-    border: "1px solid var(--card-border)",
-    borderRadius: "var(--card-radius)",
-    boxShadow: "var(--card-shadow)",
-    padding: "var(--space-5)",
-    marginBottom: "var(--section-gap)",
-  };
-
-  const sectionTitleStyle = {
-    margin: "0 0 var(--space-5)",
-    fontSize: "var(--heading-section-size)",
-    fontWeight: "var(--heading-section-weight)",
-    color: "var(--color-text-primary)",
-    lineHeight: "var(--line-height-tight)",
-  };
-
-  const gridStyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-    gap: "var(--form-gap)",
-  };
-
-  const groupStyle = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "var(--space-2)",
-  };
-
-  const fullWidthStyle = {
-    gridColumn: "1 / -1",
-  };
-
-  const labelStyle = {
-    fontSize: "var(--font-size-sm)",
-    fontWeight: "var(--font-weight-medium)",
-    color: "var(--color-text-primary)",
-  };
-
-  const errorStyle = {
-    margin: 0,
-    fontSize: "var(--font-size-xs)",
-    color: "var(--color-error)",
-    lineHeight: "var(--line-height-normal)",
-  };
-
-  const inputStyle = {
-    width: "100%",
-    minHeight: "var(--input-height-md)",
-    padding: "0 var(--input-padding-horizontal)",
-    border: "var(--input-border-width) solid var(--input-border)",
-    borderRadius: "var(--input-radius)",
-    background: "var(--input-background)",
-    color: "var(--color-text-primary)",
-    fontFamily: "var(--font-family)",
-    fontSize: "var(--font-size-sm)",
-    outline: "none",
-  };
-
-  const textareaStyle = {
-    ...inputStyle,
-    minHeight: "100px",
-    padding: "var(--space-3)",
-    resize: "vertical",
-  };
-
-  const readOnlyStyle = {
-    ...inputStyle,
-    background: "var(--disabled-background)",
-    color: "var(--disabled-text)",
-  };
-
-  const backButtonStyle = {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "var(--space-2)",
-    border: "1px solid var(--color-border)",
-    borderRadius: "var(--radius-lg)",
-    background: "var(--color-surface)",
-    color: "var(--color-text-secondary)",
-    padding: "0 var(--space-4)",
-    minHeight: "var(--button-height-md)",
-    fontFamily: "var(--font-family)",
-    fontSize: "var(--font-size-sm)",
-    fontWeight: "var(--font-weight-medium)",
-    cursor: "pointer",
-  };
-
-  const actionsStyle = {
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    gap: "var(--space-3)",
-    marginTop: "var(--space-5)",
-    paddingTop: "var(--space-5)",
-    borderTop: "1px solid var(--color-border)",
-  };
+  const buttonText =
+    mode === "edit"
+      ? "Update Employee"
+      : "Save Employee";
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="page-container">
-
         {/* Page Header */}
         <div className="page-header">
           <div>
             <h2 className="page-title">{pageTitle}</h2>
-
-            <p className="page-subtitle">
-              {pageSubtitle}
-            </p>
+            <p className="text-secondary">{pageSubtitle}</p>
           </div>
 
           <button
             type="button"
             onClick={() => navigate("/employee-list")}
-            style={backButtonStyle}
+            className="form-back-button"
           >
             <ArrowLeft size={16} />
             <span>Back to employees</span>
@@ -273,317 +208,274 @@ function EmployeeForm({ mode = "add", employee }) {
         </div>
 
         {/* Personal Information */}
-        <div style={sectionStyle}>
-          <h2 style={sectionTitleStyle}>
-            Personal Information
-          </h2>
+        <div className="form-section">
+          <h2 className="section-title">Personal Information</h2>
 
-          <div style={gridStyle}>
-
+          <div className="form-grid">
+            {/* Employee ID */}
             {mode === "edit" && (
-              <div style={groupStyle}>
-                <label style={labelStyle}>
-                  Employee ID
-                </label>
-
+              <div className="form-group">
+                <label className="form-label">Employee ID</label>
                 <input
                   type="text"
-                  value={formData.id}
+                  value={formData.id || ""}
                   readOnly
-                  style={readOnlyStyle}
+                  className="form-input form-readonly"
                 />
               </div>
             )}
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                First Name
-              </label>
-
+            {/* First Name */}
+            <div className="form-group">
+              <label className="form-label">First Name</label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
                 placeholder="Enter first name"
-                style={inputStyle}
+                className="form-input"
               />
 
               {errors.firstName && (
-                <p style={errorStyle}>
-                  {errors.firstName}
-                </p>
+                <p className="form-error">{errors.firstName}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Last Name
-              </label>
-
+            {/* Last Name */}
+            <div className="form-group">
+              <label className="form-label">Last Name</label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
                 placeholder="Enter last name"
-                style={inputStyle}
+                className="form-input"
               />
 
               {errors.lastName && (
-                <p style={errorStyle}>
-                  {errors.lastName}
-                </p>
+                <p className="form-error">{errors.lastName}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Email
-              </label>
-
+            {/* Email */}
+            <div className="form-group">
+              <label className="form-label">Email</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter email"
-                style={inputStyle}
+                readOnly={mode === "edit"}
+                className={`form-input ${
+                  mode === "edit" ? "form-readonly" : ""
+                }`}
               />
 
               {errors.email && (
-                <p style={errorStyle}>
-                  {errors.email}
-                </p>
+                <p className="form-error">{errors.email}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Phone
-              </label>
+            {/* Phone */}
+            <div className="form-group">
+              <label className="form-label">Phone Number</label>
 
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Enter phone number"
-                style={inputStyle}
-              />
+              <div className="phone-input-group">
+                <select
+                  name="countryCode"
+                  value={formData.countryCode}
+                  onChange={handleChange}
+                  className="form-input phone-country-code"
+                >
+                  <option value="">Code</option>
+
+                  {countries.map((country, index) => (
+                    <option
+                      key={`${country.name}-${index}`}
+                      value={
+                        country.dial_code ||
+                        country.phone_code ||
+                        country.code
+                      }
+                    >
+                      {country.name}{" "}
+                      {country.dial_code ||
+                        country.phone_code ||
+                        country.code}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Enter phone number"
+                  className="form-input phone-number"
+                />
+              </div>
 
               {errors.phone && (
-                <p style={errorStyle}>
-                  {errors.phone}
-                </p>
+                <p className="form-error">{errors.phone}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Gender
-              </label>
+            {/* Gender */}
+            <div className="form-group">
+              <label className="form-label">Gender</label>
 
               <select
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                style={inputStyle}
+                disabled={mode === "edit"}
+                className="form-input"
               >
-                <option value="">
-                  Select Gender
-                </option>
-                <option value="Male">
-                  Male
-                </option>
-                <option value="Female">
-                  Female
-                </option>
-                <option value="Other">
-                  Other
-                </option>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
               </select>
 
               {errors.gender && (
-                <p style={errorStyle}>
-                  {errors.gender}
-                </p>
+                <p className="form-error">{errors.gender}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Date of Birth
-              </label>
+            {/* Date of Birth */}
+            <div className="form-group">
+              <label className="form-label">Date of Birth</label>
 
               <input
                 type="date"
                 name="dob"
                 value={formData.dob}
                 onChange={handleChange}
-                style={inputStyle}
+                disabled={mode === "edit"}
+                className="form-input"
               />
 
               {errors.dob && (
-                <p style={errorStyle}>
-                  {errors.dob}
-                </p>
+                <p className="form-error">{errors.dob}</p>
               )}
             </div>
           </div>
         </div>
 
         {/* Job Information */}
-        <div style={sectionStyle}>
-          <h2 style={sectionTitleStyle}>
-            Job Information
-          </h2>
+        <div className="form-section">
+          <h2 className="section-title">Job Information</h2>
 
-          <div style={gridStyle}>
-
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Department
-              </label>
+          <div className="form-grid">
+            {/* Department */}
+            <div className="form-group">
+              <label className="form-label">Department</label>
 
               <select
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
-                style={inputStyle}
+                className="form-input"
               >
-                <option value="">
-                  Select Department
-                </option>
+                <option value="">Select Department</option>
 
-                {data.departments.map((department) => (
-                  <option
-                    key={department}
-                    value={department}
-                  >
+                {departments.map((department) => (
+                  <option key={department} value={department}>
                     {department}
                   </option>
                 ))}
               </select>
 
               {errors.department && (
-                <p style={errorStyle}>
-                  {errors.department}
-                </p>
+                <p className="form-error">{errors.department}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Designation
-              </label>
+            {/* Designation */}
+            <div className="form-group">
+              <label className="form-label">Designation</label>
 
               <select
                 name="designation"
                 value={formData.designation}
                 onChange={handleChange}
-                style={inputStyle}
+                className="form-input"
               >
-                <option value="">
-                  Select Designation
-                </option>
+                <option value="">Select Designation</option>
 
-                {data.designations.map((designation) => (
-                  <option
-                    key={designation}
-                    value={designation}
-                  >
+                {designations.map((designation) => (
+                  <option key={designation} value={designation}>
                     {designation}
                   </option>
                 ))}
               </select>
 
               {errors.designation && (
-                <p style={errorStyle}>
-                  {errors.designation}
-                </p>
+                <p className="form-error">{errors.designation}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Employee Type
-              </label>
+            {/* Employee Type */}
+            <div className="form-group">
+              <label className="form-label">Employee Type</label>
 
               <select
                 name="employeeType"
                 value={formData.employeeType}
                 onChange={handleChange}
-                style={inputStyle}
+                className="form-input"
               >
-                <option value="">
-                  Select Employee Type
-                </option>
-                <option value="Full-time">
-                  Full-time
-                </option>
-                <option value="Part-time">
-                  Part-time
-                </option>
-                <option value="Contract">
-                  Contract
-                </option>
-                <option value="Intern">
-                  Intern
-                </option>
+                <option value="">Select Employee Type</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Contract">Contract</option>
+                <option value="Intern">Intern</option>
               </select>
 
               {errors.employeeType && (
-                <p style={errorStyle}>
-                  {errors.employeeType}
-                </p>
+                <p className="form-error">{errors.employeeType}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Status
-              </label>
+            {/* Status */}
+            <div className="form-group">
+              <label className="form-label">Status</label>
 
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                style={inputStyle}
+                className="form-input"
               >
-                <option value="Active">
-                  Active
-                </option>
-                <option value="Inactive">
-                  Inactive
-                </option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
               </select>
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Date of Joining
-              </label>
+            {/* Date of Joining */}
+            <div className="form-group">
+              <label className="form-label">Date of Joining</label>
 
               <input
                 type="date"
                 name="joinDate"
                 value={formData.joinDate}
                 onChange={handleChange}
-                style={inputStyle}
+                className="form-input"
               />
 
               {errors.joinDate && (
-                <p style={errorStyle}>
-                  {errors.joinDate}
-                </p>
+                <p className="form-error">{errors.joinDate}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                Salary
-              </label>
+            {/* Salary */}
+            <div className="form-group">
+              <label className="form-label">Salary</label>
 
               <input
                 type="number"
@@ -591,56 +483,41 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.salary}
                 onChange={handleChange}
                 placeholder="Enter salary"
-                style={inputStyle}
+                className="form-input"
               />
 
               {errors.salary && (
-                <p style={errorStyle}>
-                  {errors.salary}
-                </p>
+                <p className="form-error">{errors.salary}</p>
               )}
             </div>
           </div>
         </div>
 
-        {/* Address */}
-        <div style={sectionStyle}>
-          <h2 style={sectionTitleStyle}>
-            Address
-          </h2>
+        {/* Address Information */}
+        <div className="form-section">
+          <h2 className="section-title">Address Information</h2>
 
-          <div style={gridStyle}>
-
-            <div
-              style={{
-                ...groupStyle,
-                ...fullWidthStyle,
-              }}
-            >
-              <label style={labelStyle}>
-                Address
-              </label>
+          <div className="form-grid">
+            {/* Address */}
+            <div className="form-group form-group-full">
+              <label className="form-label">Address</label>
 
               <textarea
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Enter address"
-                rows="3"
-                style={textareaStyle}
+                className="form-textarea"
               />
 
               {errors.address && (
-                <p style={errorStyle}>
-                  {errors.address}
-                </p>
+                <p className="form-error">{errors.address}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                City
-              </label>
+            {/* City */}
+            <div className="form-group">
+              <label className="form-label">City</label>
 
               <input
                 type="text"
@@ -648,127 +525,41 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.city}
                 onChange={handleChange}
                 placeholder="Enter city"
-                style={inputStyle}
+                className="form-input"
               />
 
               {errors.city && (
-                <p style={errorStyle}>
-                  {errors.city}
-                </p>
+                <p className="form-error">{errors.city}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                State
-              </label>
+            {/* State */}
+            <div className="form-group">
+              <label className="form-label">State</label>
 
               <select
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
-                style={inputStyle}
+                className="form-input"
               >
-                <option value="">
-                  Select State
-                </option>
-                <option value="Andhra Pradesh">
-                  Andhra Pradesh
-                </option>
-                <option value="Arunachal Pradesh">
-                  Arunachal Pradesh
-                </option>
-                <option value="Assam">
-                  Assam
-                </option>
-                <option value="Bihar">
-                  Bihar
-                </option>
-                <option value="Chhattisgarh">
-                  Chhattisgarh
-                </option>
-                <option value="Goa">
-                  Goa
-                </option>
-                <option value="Gujarat">
-                  Gujarat
-                </option>
-                <option value="Haryana">
-                  Haryana
-                </option>
-                <option value="Himachal Pradesh">
-                  Himachal Pradesh
-                </option>
-                <option value="Jharkhand">
-                  Jharkhand
-                </option>
-                <option value="Karnataka">
-                  Karnataka
-                </option>
-                <option value="Kerala">
-                  Kerala
-                </option>
-                <option value="Madhya Pradesh">
-                  Madhya Pradesh
-                </option>
-                <option value="Maharashtra">
-                  Maharashtra
-                </option>
-                <option value="Manipur">
-                  Manipur
-                </option>
-                <option value="Meghalaya">
-                  Meghalaya
-                </option>
-                <option value="Mizoram">
-                  Mizoram
-                </option>
-                <option value="Nagaland">
-                  Nagaland
-                </option>
-                <option value="Odisha">
-                  Odisha
-                </option>
-                <option value="Punjab">
-                  Punjab
-                </option>
-                <option value="Rajasthan">
-                  Rajasthan
-                </option>
-                <option value="Sikkim">
-                  Sikkim
-                </option>
-                <option value="Tamil Nadu">
-                  Tamil Nadu
-                </option>
-                <option value="Telangana">
-                  Telangana
-                </option>
-                <option value="Tripura">
-                  Tripura
-                </option>
-                <option value="Uttar Pradesh">
-                  Uttar Pradesh
-                </option>
-                <option value="Uttarakhand">
-                  Uttarakhand
-                </option>
-                <option value="West Bengal">
-                  West Bengal
-                </option>
+                <option value="">Select State</option>
+
+                {states.map((state) => (
+                  <option key={state.name} value={state.name}>
+                    {state.name}
+                  </option>
+                ))}
               </select>
 
               {errors.state && (
-                <p style={errorStyle}>
-                  {errors.state}
-                </p>
+                <p className="form-error">{errors.state}</p>
               )}
             </div>
 
-            <div style={groupStyle}>
-              <label style={labelStyle}>
-                ZIP Code
-              </label>
+            {/* ZIP Code */}
+            <div className="form-group">
+              <label className="form-label">ZIP Code</label>
 
               <input
                 type="text"
@@ -776,48 +567,62 @@ function EmployeeForm({ mode = "add", employee }) {
                 value={formData.zip}
                 onChange={handleChange}
                 placeholder="Enter ZIP code"
-                style={inputStyle}
+                className="form-input"
               />
 
               {errors.zip && (
-                <p style={errorStyle}>
-                  {errors.zip}
-                </p>
+                <p className="form-error">{errors.zip}</p>
               )}
             </div>
           </div>
         </div>
 
         {/* Skills */}
-        <div style={sectionStyle}>
-          <h2 style={sectionTitleStyle}>
-            Skills
-          </h2>
+        <div className="form-section">
+          <h2 className="section-title">Skills</h2>
 
-          <div style={gridStyle}>
-            <div
-              style={{
-                ...groupStyle,
-                ...fullWidthStyle,
-              }}
-            >
-              <label style={labelStyle}>
-                Skills
-              </label>
+          <div className="form-grid">
+            <div className="form-group form-group-full">
+              <label className="form-label">Skills</label>
 
               <textarea
                 name="skills"
                 value={formData.skills}
                 onChange={handleChange}
                 placeholder="Enter skills separated by commas"
-                style={textareaStyle}
+                className="form-textarea"
               />
+
+              {errors.skills && (
+                <p className="form-error">{errors.skills}</p>
+              )}
             </div>
           </div>
         </div>
 
+        {/* Documents */}
+        <div className="form-section">
+          <h2 className="section-title">Documents</h2>
+
+          <div className="form-group">
+            <label className="form-label">Documents</label>
+            <input
+              type="file"
+              name="documents"
+              accept=".pdf,application/pdf"
+              multiple
+              onChange={handleChange}
+              className="form-input"
+            />
+
+            {errors.documents && (
+              <p className="form-error">{errors.documents}</p>
+            )}
+          </div>
+        </div>
+
         {/* Actions */}
-        <div style={actionsStyle}>
+        <div className="form-actions">
           <Button
             type="button"
             variant="secondary"
@@ -826,9 +631,7 @@ function EmployeeForm({ mode = "add", employee }) {
             Cancel
           </Button>
 
-          <Button type="submit">
-            {buttonText}
-          </Button>
+          <Button type="submit">{buttonText}</Button>
         </div>
       </div>
     </form>
