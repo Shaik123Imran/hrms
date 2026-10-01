@@ -373,7 +373,7 @@ export async function login(email, password, demoRole) {
     (item) =>
       item.email.toLowerCase() === String(email).toLowerCase() &&
       item.password === password &&
-      item.role === role
+      item.role === demoRole
   );
 
   let session;

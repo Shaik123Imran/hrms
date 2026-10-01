@@ -55,7 +55,7 @@ if (success) {
         <Card
           title="HRMS Login"
           subtitle="Human Resource Management System"
-          className="w-full max-w-sm"
+          className="w-full max-w-sm login-card"
           centerHeader={true}
         >
           <form onSubmit={handleSubmit}>

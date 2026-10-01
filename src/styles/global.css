@@ -629,3 +629,10 @@ tbody tr:last-child td {
 .shadow-lift {
   box-shadow: var(--modal-shadow);
 }
+
+.login-card h3 {
+  font-size: 20px;
+}
+.login-card p {
+  font-size: 14px;
+}
