@@ -366,62 +366,64 @@ export async function updateLeaveStatus(id, status) {
   writeDb(db);
   return delay(db.leaves[index]);
 }
-
-export async function login(email, password, demoRole) {
+export async function login(email, password, role) {
   const db = readDb();
+
+  const normalizedEmail = String(email).trim().toLowerCase();
+
   const user = db.users.find(
     (item) =>
-      item.email.toLowerCase() === String(email).toLowerCase() &&
+      item.email.toLowerCase() === normalizedEmail &&
       item.password === password &&
-      item.role === demoRole
+      item.role === role
   );
 
-  let session;
-  if (user) {
-    session = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      employeeId: user.employeeId ?? null,
-    };
-  } else if (demoRole) {
-    const DEMO_ROLE_MAP = {
-      hr: { role: 'HR', employeeId: null },
-      manager: { role: 'Manager', employeeId: 'e4' },
-      employee: { role: 'Employee', employeeId: 'e1' },
-    };
-    const mapped = DEMO_ROLE_MAP[demoRole] ?? DEMO_ROLE_MAP.employee;
-    session = {
-      id: `demo-${Date.now()}`,
-      name: email.split('@')[0] || 'Demo User',
-      email,
-      role: mapped.role,
-      employeeId: mapped.employeeId,
-    };
-  } else {
+  if (!user) {
     return delay(null, 300);
   }
 
-  if (isBrowser) localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  const session = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    employeeId: user.employeeId ?? null,
+  };
+
+  if (isBrowser) {
+    localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify(session)
+    );
+  }
+
   return delay(session, 300);
 }
 
 export function readSession() {
   if (!isBrowser) return null;
+
   const raw = localStorage.getItem(SESSION_KEY);
+
   if (!raw) return null;
+
   try {
     return JSON.parse(raw);
   } catch {
+    localStorage.removeItem(SESSION_KEY);
     return null;
   }
 }
 
 export function logout() {
-  if (isBrowser) localStorage.removeItem(SESSION_KEY);
+  if (isBrowser) {
+    localStorage.removeItem(SESSION_KEY);
+  }
 }
 
 export function resetData() {
-  if (isBrowser) localStorage.removeItem(STORAGE_KEY);
+  if (isBrowser) {
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }
+
