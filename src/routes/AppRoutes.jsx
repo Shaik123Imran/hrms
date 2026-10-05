@@ -1,10 +1,11 @@
+
 import { Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "../pages/Authentication/login";
 import Dashboard from "../pages/Dashboard/Dashboard";
 
 import AddEmployee from "../pages/EmployeeForm/AddEmployee";
 import EditEmployee from "../pages/EmployeeForm/EditEmployee";
-import EmployeeForm from "../pages/EmployeeForm/EmployeeForm";
 
 import EmployeeList from "../pages/EmployeeList/EmployeeList";
 import EmployeeProfile from "../pages/EmployeeProfile/EmployeeProfile";
@@ -16,117 +17,110 @@ import ApplyLeave from "../pages/LeaveManagement/ApplyLeave";
 import Approved from "../pages/LeaveManagement/Approved";
 import LeaveRequests from "../pages/LeaveManagement/LeaveRequests";
 import Reject from "../pages/LeaveManagement/Reject";
+
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" 
-      element={<Login />
-      }/>
-
       <Route
-        path="/dashboard"
-        element={
-          <DashboardLayout title="Dashboard">
-            <Dashboard />
-          </DashboardLayout>
-        }
+        path="/login"
+        element={<Login />}
       />
+      <Route element={<ProtectedRoute />}>
 
-      <Route
-        path="/employee/add"
-        element={
-          <DashboardLayout title="Add Employee">
-            <AddEmployee />
-          </DashboardLayout>
-        }
-      />
+        {/* Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <DashboardLayout title="Dashboard">
+              <Dashboard />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/employee/add"
+          element={
+            <DashboardLayout title="Add Employee">
+              <AddEmployee />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/employees/:employeeId"
+          element={
+            <DashboardLayout title="Edit Employee">
+              <EditEmployee />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/employee-list"
+          element={
+            <DashboardLayout title="Employee List">
+              <EmployeeList />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/employee/profile/*"
+          element={
+            <DashboardLayout title="Employee Profile">
+              <EmployeeProfile />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/HRProfile/*"
+          element={
+            <DashboardLayout title="HR Profile">
+              <HRProfile />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/attendance"
+          element={
+            <DashboardLayout title="Attendance">
+              <Attendance />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/leave/requests"
+          element={
+            <DashboardLayout title="Leave Requests">
+              <LeaveRequests />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/leave/apply"
+          element={
+            <DashboardLayout title="Apply Leave">
+              <ApplyLeave />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/leave/approved"
+          element={
+            <DashboardLayout title="Approved Leaves">
+              <Approved />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/leave/rejected"
+          element={
+            <DashboardLayout title="Rejected Leaves">
+              <Reject />
+            </DashboardLayout>
+          }
+        />
 
-      <Route
-        path={`/employees/:employeeId`}
-        element={
-          <DashboardLayout title="Edit Employee">
-            <EditEmployee />
-          </DashboardLayout>
-        }
-      />
-
-      
-
-      <Route
-        path="/employee-list"
-        element={
-          <DashboardLayout title="Employee List">
-            <EmployeeList />
-          </DashboardLayout>
-        }
-      />
-
-      <Route
-        path="/employee/profile/*"
-        element={
-          <DashboardLayout title="Employee Profile">
-            <EmployeeProfile />
-          </DashboardLayout>
-        }
-      />
-      <Route
-        path="/HRProfile/*"
-        element={
-          <DashboardLayout title="HR Profile">
-            <HRProfile />
-          </DashboardLayout>
-        }
-      />
-
-      <Route
-        path="/attendance"
-        element={
-          <DashboardLayout title="Attendance">
-            <Attendance />
-          </DashboardLayout>
-        }
-      />
-
-    
-
-      <Route
-        path="/leave/requests"
-        element={
-          <DashboardLayout title="Leave Requests">
-            <LeaveRequests />
-          </DashboardLayout>
-        }
-      />
-
-      <Route
-        path="/leave/apply"
-        element={
-          <DashboardLayout title="Apply Leave">
-            <ApplyLeave />
-          </DashboardLayout>
-        }
-      />
-
-      <Route
-        path="/leave/approved"
-        element={
-          <DashboardLayout title="Approved Leaves">
-            <Approved />
-          </DashboardLayout>
-        }
-      />
-
-      <Route
-        path="/leave/rejected"
-        element={
-          <DashboardLayout title="Rejected Leaves">
-            <Reject />
-          </DashboardLayout>
-        }
-      />
+      </Route>
 
       <Route
         path="*"
@@ -137,6 +131,8 @@ export default function AppRoutes() {
           />
         }
       />
+
     </Routes>
   );
 }
+
