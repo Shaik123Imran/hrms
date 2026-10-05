@@ -1,71 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
-import data from "../../data/data.json";
+import {
+  fetchLeaveManagementData,
+  updateLeaveStatus as saveLeaveStatus,
+} from "../../services/dataService.js";
 import Card from "../../components/ui/Card.jsx";
 import Button from "../../components/ui/Button.jsx";
 import EmptyState from "../../components/ui/EmptyState.jsx";
-const STORAGE_KEY = "hrms_leave_data";
-const OLD_MANAGER_ID = "e13";
-function getStartingLeaveData() {
-  return { employees: data.employees, leaves: data.leaves };
-}
-export function readLeaveData() {
-  const savedValue = localStorage.getItem(STORAGE_KEY);
-  if (!savedValue) {
-    const startingData = getStartingLeaveData();
-    saveLeaveData(startingData);
-    return startingData;
-  }
-  try {
-    const savedData = JSON.parse(savedValue);
-    let savedEmployees = [];
-    if (Array.isArray(savedData.employees)) {
-      savedEmployees = savedData.employees;
-    }
-    const manager = data.users.find((user) => user.role === "Manager");
-    const employees = data.employees.map((employee) => {
-      const savedEmployee = savedEmployees.find(
-        (item) => item.id === employee.id,
-      );
-      if (!savedEmployee) {
-        return employee;
-      }
-      return {
-        ...savedEmployee,
-        firstName: employee.firstName,
-        lastName: employee.lastName,
-        email: employee.email,
-      };
-    });
-    const extraEmployees = savedEmployees.filter((employee) => {
-      const isOldManager = employee.id === OLD_MANAGER_ID;
-      const employeeAlreadyExists = data.employees.some(
-        (item) => item.id === employee.id,
-      );
-      return !isOldManager && !employeeAlreadyExists;
-    });
-    employees.push(...extraEmployees);
-    let savedLeaves = data.leaves;
-    if (Array.isArray(savedData.leaves)) {
-      savedLeaves = savedData.leaves;
-    }
-    const leaves = savedLeaves.map((leave) => {
-      if (leave.employeeId === OLD_MANAGER_ID && manager?.employeeId) {
-        return { ...leave, employeeId: manager.employeeId };
-      }
-      return leave;
-    });
-    return { employees, leaves };
-  } catch {
-    localStorage.removeItem(STORAGE_KEY);
-    const startingData = getStartingLeaveData();
-    saveLeaveData(startingData);
-    return startingData;
-  }
-}
-export function saveLeaveData(leaveData) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(leaveData));
-}
+
 const statusClassNames = {
   Approved:
     "badge bg-[color:var(--color-success-light)] text-[color:var(--leave-approved)]",
@@ -110,7 +52,7 @@ export function LeaveCard({
     statusClassName = statusClassNames.Pending;
   }
   return (
-    <Card title={employeeName} className="mb-4" bodyClassName="space-y-2">
+    <Card title={employeeName} bodyClassName="space-y-2">
       <p>
         <strong>Employee ID:</strong> {employee?.id || leave.employeeId}
       </p>
@@ -199,12 +141,21 @@ export function LeaveCard({
 }
 export default function LeaveRequests() {
   const { user } = useAuth();
-  const [leaveData, setLeaveData] = useState(() => readLeaveData());
+  const [leaveData, setLeaveData] = useState({ employees: [], leaves: [] });
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    async function loadLeaveData() {
+      const data = await fetchLeaveManagementData();
+      setLeaveData(data);
+      setIsLoading(false);
+    }
+    loadLeaveData();
+  }, []);
   const [filter, setFilter] = useState("All");
   const employees = leaveData.employees;
   const leaves = leaveData.leaves;
   const role = String(user?.role || "").toLowerCase();
-  const isHr = role === "hr" || role === "hr manager";
+  const isHr = role === "hr";
   const isAdmin = role === "admin";
   const isManager = role === "manager";
   const canViewRequests = isHr || isAdmin || isManager;
@@ -253,7 +204,7 @@ export default function LeaveRequests() {
     }
     return false;
   }
-  function updateLeaveStatus(leaveId, status, rejectionReason = "") {
+  async function updateLeaveStatus(leaveId, status, rejectionReason = "") {
     const targetLeave = leaves.find((leave) => leave.id === leaveId);
     const employee = employees.find(
       (item) => item.id === targetLeave?.employeeId,
@@ -265,20 +216,28 @@ export default function LeaveRequests() {
     ) {
       return;
     }
-    const updatedLeaves = leaves.map((leave) => {
-      if (leave.id === leaveId) {
-        return { ...leave, status, rejectionReason };
-      }
-      return leave;
-    });
-    const updatedData = { employees, leaves: updatedLeaves };
-    setLeaveData(updatedData);
-    saveLeaveData(updatedData);
+    const updatedLeave = await saveLeaveStatus(
+      leaveId,
+      status,
+      rejectionReason,
+    );
+    if (!updatedLeave) {
+      return;
+    }
+    setLeaveData((currentData) => ({
+      ...currentData,
+      leaves: currentData.leaves.map((leave) =>
+        leave.id === updatedLeave.id ? updatedLeave : leave,
+      ),
+    }));
   }
   if (!canViewRequests) {
     return (
       <EmptyState title="You don't have access to the leave request queue." />
     );
+  }
+  if (isLoading) {
+    return <EmptyState title="Loading the Leave Requests..." />;
   }
   let requests = visibleLeaves;
   if (filter === "Pending") {
@@ -311,23 +270,25 @@ export default function LeaveRequests() {
           {requests.length === 0 ? (
             <EmptyState title="No leave requests found" />
           ) : (
-            requests.map((leave) => {
-              const employee = employees.find(
-                (person) => person.id === leave.employeeId,
-              );
-              return (
-                <LeaveCard
-                  key={leave.id}
-                  leave={leave}
-                  employee={employee}
-                  canReview={canReviewLeave(leave, employee)}
-                  onApprove={(id) => updateLeaveStatus(id, "Approved")}
-                  onReject={(id, reason) =>
-                    updateLeaveStatus(id, "Rejected", reason)
-                  }
-                />
-              );
-            })
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {requests.map((leave) => {
+                const employee = employees.find(
+                  (person) => person.id === leave.employeeId,
+                );
+                return (
+                  <LeaveCard
+                    key={leave.id}
+                    leave={leave}
+                    employee={employee}
+                    canReview={canReviewLeave(leave, employee)}
+                    onApprove={(id) => updateLeaveStatus(id, "Approved")}
+                    onReject={(id, reason) =>
+                      updateLeaveStatus(id, "Rejected", reason)
+                    }
+                  />
+                );
+              })}
+            </div>
           )}
         </div>
       </main>

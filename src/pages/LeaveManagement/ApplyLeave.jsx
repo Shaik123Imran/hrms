@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
 import Card from "../../components/ui/Card.jsx";
 import Button from "../../components/ui/Button.jsx";
 import EmptyState from "../../components/ui/EmptyState.jsx";
-import { LeaveCard, readLeaveData, saveLeaveData } from "./LeaveRequests.jsx";
+import { LeaveCard } from "./LeaveRequests.jsx";
+import {
+  createLeave,
+  fetchLeaveManagementData,
+} from "../../services/dataService.js";
 const leaveTypes = [
   "Casual Leave",
   "Sick Leave",
@@ -43,13 +47,25 @@ function DateField({ label, value, onChange, minimumDate }) {
 export default function ApplyLeave() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [leaveData, setLeaveData] = useState(() => readLeaveData());
+  const [leaveData, setLeaveData] = useState({
+    employees: [],
+    leaves: [],
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    async function loadLeaveData() {
+      const data = await fetchLeaveManagementData();
+      setLeaveData(data);
+      setIsLoading(false);
+    }
+    loadLeaveData();
+  }, []);
   const [leaveType, setLeaveType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [reason, setReason] = useState("");
   const role = String(user?.role || "").toLowerCase();
-  const allowedRoles = ["employee", "hr", "hr manager", "manager", "admin"];
+  const allowedRoles = ["employee", "hr", "manager", "admin"];
   const canApply = allowedRoles.includes(role);
   const employees = leaveData.employees;
   const leaves = leaveData.leaves;
@@ -65,7 +81,7 @@ export default function ApplyLeave() {
       (leave) => leave.employeeId === currentEmployee.id,
     );
   }
-  function submitLeave(event) {
+  async function submitLeave(event) {
     event.preventDefault();
     if (
       !currentEmployee ||
@@ -84,25 +100,20 @@ export default function ApplyLeave() {
     const firstDay = Date.parse(`${startDate}T00:00:00Z`);
     const lastDay = Date.parse(`${endDate}T00:00:00Z`);
     const days = Math.round((lastDay - firstDay) / 86400000) + 1;
-    const newLeave = {
+    const createdLeave = await createLeave({
       employeeId: currentEmployee.id,
       applicantRole: role,
       applicantUserId: user?.id,
-      id: `lv${leaves.length + 1}`,
       type: leaveType,
       startDate,
       endDate,
       days,
       reason: reason.trim(),
-      status: "Pending",
-      rejectionReason: "",
-    };
-    const updatedData = {
-      employees,
-      leaves: [...leaves, newLeave],
-    };
-    setLeaveData(updatedData);
-    saveLeaveData(updatedData);
+    });
+    setLeaveData((currentData) => ({
+      ...currentData,
+      leaves: [...currentData.leaves, createdLeave],
+    }));
     setLeaveType("");
     setStartDate("");
     setEndDate("");
@@ -115,6 +126,9 @@ export default function ApplyLeave() {
         description="You do not have permission to submit a leave application."
       />
     );
+  }
+  if (isLoading) {
+    return <EmptyState title="Leave data is Loading..." />;
   }
   if (!currentEmployee) {
     return (
@@ -195,13 +209,15 @@ export default function ApplyLeave() {
             {myLeaves.length === 0 ? (
               <EmptyState title="No leave requests yet" />
             ) : (
-              myLeaves.map((leave) => (
-                <LeaveCard
-                  key={leave.id}
-                  leave={leave}
-                  employee={currentEmployee}
-                />
-              ))
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {myLeaves.map((leave) => (
+                  <LeaveCard
+                    key={leave.id}
+                    leave={leave}
+                    employee={currentEmployee}
+                  />
+                ))}
+              </div>
             )}
           </section>
         </div>

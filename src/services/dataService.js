@@ -88,6 +88,14 @@ export async function fetchLeaves() {
   return delay(readDb().leaves);
 }
 
+export async function fetchLeaveManagementData() {
+  const [employees, leaves] = await Promise.all([
+    fetchEmployees(),
+    fetchLeaves(),
+  ]);
+  return { employees, leaves };
+}
+
 export async function fetchDashboardData() {
   const db = readDb();
   const today = seedData.meta.generatedAt;
@@ -358,14 +366,18 @@ export async function createLeave(leave) {
   return delay(newLeave);
 }
 
-export async function updateLeaveStatus(id, status) {
+export async function updateLeaveStatus(id, status, rejectionReason = '') {
   const db = readDb();
-  const index = db.leaves.findIndex((item) => item.id === id);
-  if (index === -1) return delay(null);
-  db.leaves[index].status = status;
+  const leave = db.leaves.find((item) => item.id === id);
+  if (!leave || leave.status !== 'Pending' || !['Approved', 'Rejected'].includes(status) || (status === 'Rejected' && !rejectionReason.trim())) {
+    return delay(null);
+  }
+  leave.status = status;
+  leave.rejectionReason = status === 'Rejected' ? rejectionReason.trim() : '';
   writeDb(db);
-  return delay(db.leaves[index]);
+  return delay(leave);
 }
+
 export async function login(email, password, role) {
   const db = readDb();
 
