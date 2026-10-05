@@ -30,7 +30,7 @@ const DASHBOARD_CSS = `
 /* ---------- stat tiles ---------- */
 .dashboard-stats {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--dashboard-grid-gap);
   margin-bottom: var(--section-gap);
 }
@@ -50,6 +50,11 @@ const DASHBOARD_CSS = `
   display: flex; align-items: center; justify-content: center;
   background: var(--color-primary-light); color: var(--color-primary); flex-shrink: 0;
 }
+.stat-icon-primary { background: var(--color-primary-light); color: var(--color-primary); }
+.stat-icon-success { background: var(--color-success-light); color: var(--color-success); }
+.stat-icon-warning { background: var(--color-warning-light); color: var(--color-warning); }
+.stat-icon-error   { background: var(--color-error-light);   color: var(--color-error); }
+.stat-icon-info    { background: var(--color-info-light);    color: var(--color-info); }
 .stat-number {
   margin-top: var(--space-2);
   font-size: var(--stat-number-size);
@@ -102,7 +107,6 @@ const DASHBOARD_CSS = `
 @media (prefers-reduced-motion: reduce) { .dashboard-fade-in { animation: none; } }
 
 /* ---------- responsive ---------- */
-@media (max-width: 1200px) { .dashboard-stats { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) {
   .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
@@ -162,12 +166,12 @@ function RoleHeader({ title, subtitle, role }) {
   );
 }
 
-function StatTile({ icon: Icon, label, value, suffix }) {
+function StatTile({ icon: Icon, label, value, suffix, tone = 'primary' }) {
   return (
     <div className="stat-card">
       <div className="stat-card-top">
         <span className="stat-label">{label}</span>
-        <span className="stat-icon"><Icon size={20} /></span>
+        <span className={`stat-icon stat-icon-${tone}`}><Icon size={20} /></span>
       </div>
       <div className="stat-number">
         {value}
@@ -282,12 +286,12 @@ function AdminDashboard({ data, user }) {
       <RoleHeader title="Admin Dashboard" subtitle="Organization-wide overview" role={user.role} />
 
       <StatGrid>
-        <StatTile icon={Users} label="Total Employees" value={stats.totalEmployees} />
-        <StatTile icon={CalendarCheck2} label="Present Today" value={stats.presentToday} />
-        <StatTile icon={Clock} label="Late Today" value={stats.lateToday} />
-        <StatTile icon={CalendarOff} label="On Leave Today" value={stats.onLeaveToday} />
-        <StatTile icon={Shield} label="Pending Leaves" value={stats.pendingLeaves} />
-        <StatTile icon={TrendingUp} label="Avg Attendance" value={stats.avgAttendance} suffix="%" />
+        <StatTile icon={Users} label="Total Employees" value={stats.totalEmployees} tone="primary" />
+        <StatTile icon={CalendarCheck2} label="Present Today" value={stats.presentToday} tone="success" />
+        <StatTile icon={Clock} label="Late Today" value={stats.lateToday} tone="warning" />
+        <StatTile icon={CalendarOff} label="On Leave Today" value={stats.onLeaveToday} tone="info" />
+        <StatTile icon={Shield} label="Pending Leaves" value={stats.pendingLeaves} tone="error" />
+        <StatTile icon={TrendingUp} label="Avg Attendance" value={stats.avgAttendance} suffix="%" tone="primary" />
       </StatGrid>
 
       <div className="dashboard-grid dashboard-fade-in" style={{ animationDelay: '120ms' }}>
@@ -370,12 +374,12 @@ function HRDashboard({ data, user }) {
       <RoleHeader title="HR Dashboard" subtitle="People operations at a glance" role={user.role} />
 
       <StatGrid>
-        <StatTile icon={Users} label="Total Employees" value={stats.totalEmployees} />
-        <StatTile icon={UserPlus} label="New Joiners" value={stats.newJoiners ?? 0} />
-        <StatTile icon={CalendarOff} label="On Leave Today" value={stats.onLeaveToday} />
-        <StatTile icon={Shield} label="Pending Leaves" value={stats.pendingLeaves} />
-        <StatTile icon={CheckCircle2} label="Approved This Month" value={stats.approvedThisMonth ?? 0} />
-        <StatTile icon={TrendingUp} label="Avg Attendance" value={stats.avgAttendance} suffix="%" />
+        <StatTile icon={Users} label="Total Employees" value={stats.totalEmployees} tone="primary" />
+        <StatTile icon={UserPlus} label="New Joiners" value={stats.newJoiners ?? 0} tone="success" />
+        <StatTile icon={CalendarOff} label="On Leave Today" value={stats.onLeaveToday} tone="info" />
+        <StatTile icon={Shield} label="Pending Leaves" value={stats.pendingLeaves} tone="error" />
+        <StatTile icon={CheckCircle2} label="Approved This Month" value={stats.approvedThisMonth ?? 0} tone="success" />
+        <StatTile icon={TrendingUp} label="Avg Attendance" value={stats.avgAttendance} suffix="%" tone="primary" />
       </StatGrid>
 
       <div className="dashboard-grid dashboard-fade-in" style={{ animationDelay: '120ms' }}>
@@ -466,11 +470,11 @@ function TeamDashboard({ data, user }) {
       <RoleHeader title={`${firstName}'s Team`} subtitle="How your team is doing today" role={user.role} />
 
       <StatGrid>
-        <StatTile icon={Users} label="Team Size" value={stats.teamSize} />
-        <StatTile icon={CalendarCheck2} label="Present Today" value={stats.presentToday} />
-        <StatTile icon={Clock} label="Late Today" value={stats.lateToday} />
-        <StatTile icon={CalendarOff} label="On Leave Today" value={stats.onLeaveToday} />
-        <StatTile icon={Shield} label="Pending Approvals" value={stats.pendingApprovals} />
+        <StatTile icon={Users} label="Team Size" value={stats.teamSize} tone="primary" />
+        <StatTile icon={CalendarCheck2} label="Present Today" value={stats.presentToday} tone="success" />
+        <StatTile icon={Clock} label="Late Today" value={stats.lateToday} tone="warning" />
+        <StatTile icon={CalendarOff} label="On Leave Today" value={stats.onLeaveToday} tone="info" />
+        <StatTile icon={Shield} label="Pending Approvals" value={stats.pendingApprovals} tone="error" />
       </StatGrid>
 
       <div className="dashboard-grid dashboard-fade-in" style={{ animationDelay: '120ms' }}>
@@ -527,10 +531,10 @@ function SelfDashboard({ data, user }) {
       <RoleHeader title={`Welcome back, ${firstName}`} subtitle="Your personal overview" role={user.role} />
 
       <StatGrid>
-        <StatTile icon={CalendarCheck2} label="Attendance This Month" value={stats.attendancePct} suffix="%" />
-        <StatTile icon={Umbrella} label="Leave Balance" value={stats.leaveBalance} suffix=" days" />
-        <StatTile icon={ClipboardList} label="Pending Requests" value={stats.pendingRequests} />
-        <StatTile icon={Clock} label="Late Days" value={stats.lateCount} />
+        <StatTile icon={CalendarCheck2} label="Attendance This Month" value={stats.attendancePct} suffix="%" tone="success" />
+        <StatTile icon={Umbrella} label="Leave Balance" value={stats.leaveBalance} suffix=" days" tone="primary" />
+        <StatTile icon={ClipboardList} label="Pending Requests" value={stats.pendingRequests} tone="error" />
+        <StatTile icon={Clock} label="Late Days" value={stats.lateCount} tone="warning" />
       </StatGrid>
 
       <div className="dashboard-grid dashboard-fade-in" style={{ animationDelay: '120ms' }}>
