@@ -24,7 +24,6 @@ const ROLES = {
 };
 
 const SIDEBAR_MENU = [
-
   // Dashboard
   {
     title: "Dashboard",
@@ -45,7 +44,6 @@ const SIDEBAR_MENU = [
     ],
   },
 
-
   // Employee
   {
     title: "Employee",
@@ -53,7 +51,6 @@ const SIDEBAR_MENU = [
     type: "group",
 
     items: [
-
       {
         label: "Add Employee",
         path: "/employee/add",
@@ -94,10 +91,8 @@ const SIDEBAR_MENU = [
           ROLES.HR,
         ],
       },
-
     ],
   },
-
 
   // Attendance
   {
@@ -106,7 +101,6 @@ const SIDEBAR_MENU = [
     type: "group",
 
     items: [
-
       {
         label: "Attendance",
         path: "/attendance",
@@ -118,10 +112,8 @@ const SIDEBAR_MENU = [
           ROLES.EMPLOYEE,
         ],
       },
-
     ],
   },
-
 
   // Leave Management
   {
@@ -130,7 +122,6 @@ const SIDEBAR_MENU = [
     type: "group",
 
     items: [
-
       {
         label: "Leave Requests",
         path: "/leave/requests",
@@ -177,15 +168,13 @@ const SIDEBAR_MENU = [
           ROLES.EMPLOYEE,
         ],
       },
-
     ],
   },
-
 ];
 
-function Sidebar() {
-
+function Sidebar({ collapsed }) {
   const { user } = useAuth();
+
   const userRole =
     user?.role?.toLowerCase() || ROLES.EMPLOYEE;
 
@@ -201,7 +190,6 @@ function Sidebar() {
 
   const visibleMenu = SIDEBAR_MENU
     .map((section) => {
-
       const visibleItems = section.items.filter(
         (item) => hasAccess(item.roles)
       );
@@ -214,57 +202,60 @@ function Sidebar() {
         ...section,
         items: visibleItems,
       };
-
     })
     .filter(Boolean);
 
   const toggleMenu = (title) => {
-
     setOpenMenus((prev) => ({
       ...prev,
       [title]: !prev[title],
     }));
-
   };
 
-
   return (
-
     <aside
-      className="
+      className={`
         fixed
         left-0
         top-0
         z-40
         flex
         h-screen
-        w-[280px]
         flex-col
         border-r
         border-gray-200
         bg-white
-      "
+        transition-all
+        duration-300
+        ${collapsed ? "w-[72px]" : "w-[280px]"}
+      `}
     >
 
+      {/* Logo Section */}
       <div
-        className="
+        className={`
           flex
           h-20
           shrink-0
           items-center
           border-b
           border-gray-200
-          px-5
-        "
+          ${collapsed ? "justify-center px-0" : "px-5"}
+        `}
       >
-
-        <div className="flex items-center gap-3">
-
+        <div
+          className={`
+            flex
+            items-center
+            ${collapsed ? "justify-center" : "gap-3"}
+          `}
+        >
           <div
             className="
               flex
               h-11
               w-11
+              shrink-0
               items-center
               justify-center
               rounded-xl
@@ -277,54 +268,50 @@ function Sidebar() {
             R
           </div>
 
-          <div>
+          {!collapsed && (
+            <div>
+              <h1
+                className="
+                  text-lg
+                  font-bold
+                  text-gray-900
+                "
+              >
+                Relyntis HRMS
+              </h1>
 
-            <h1
-              className="
-                text-lg
-                font-bold
-                text-gray-900
-              "
-            >
-              Relyntis HRMS
-            </h1>
-
-            <p
-              className="
-                text-xs
-                text-gray-500
-              "
-            >
-              Human Resource Management
-            </p>
-
-          </div>
-
+              <p
+                className="
+                  text-xs
+                  text-gray-500
+                "
+              >
+                Human Resource Management
+              </p>
+            </div>
+          )}
         </div>
-
       </div>
 
+      {/* User Profile */}
       <div
-        className="
+        className={`
           border-b
           border-gray-100
-          px-4
           py-3
-        "
+          ${collapsed ? "px-0" : "px-4"}
+        `}
       >
-
         <div
-          className="
+          className={`
             flex
             items-center
-            gap-3
             rounded-xl
             bg-gray-50
-            px-3
             py-3
-          "
+            ${collapsed ? "justify-center px-0" : "gap-3 px-3"}
+          `}
         >
-
           <div
             className="
               flex
@@ -342,36 +329,34 @@ function Sidebar() {
             {user?.name?.charAt(0)?.toUpperCase() || "U"}
           </div>
 
+          {!collapsed && (
+            <div className="min-w-0">
+              <p
+                className="
+                  truncate
+                  text-sm
+                  font-semibold
+                  text-gray-800
+                "
+              >
+                {user?.name || "Current User"}
+              </p>
 
-          <div className="min-w-0">
-
-            <p
-              className="
-                truncate
-                text-sm
-                font-semibold
-                text-gray-800
-              "
-            >
-              {user?.name || "Current User"}
-            </p>
-
-            <p
-              className="
-                text-xs
-                capitalize
-                text-gray-500
-              "
-            >
-              {userRole}
-            </p>
-
-          </div>
-
+              <p
+                className="
+                  text-xs
+                  capitalize
+                  text-gray-500
+                "
+              >
+                {userRole}
+              </p>
+            </div>
+          )}
         </div>
-
       </div>
 
+      {/* Navigation */}
       <nav
         className="
           flex-1
@@ -380,33 +365,32 @@ function Sidebar() {
           py-4
         "
       >
-
         <div className="space-y-1">
 
           {visibleMenu.map((section) => {
-
             const Icon = section.icon;
 
+            {/* Dashboard */}
             if (section.type === "single") {
-
               const item = section.items[0];
 
               return (
-
                 <NavLink
                   key={section.title}
                   to={item.path}
+                  title={collapsed ? item.label : ""}
                   className={({ isActive }) =>
                     `
                     flex
                     items-center
-                    gap-3
                     rounded-lg
                     px-3
                     py-3
                     text-sm
                     font-medium
                     transition
+
+                    ${collapsed ? "justify-center" : "gap-3"}
 
                     ${
                       isActive
@@ -416,39 +400,39 @@ function Sidebar() {
                     `
                   }
                 >
-
                   <Icon
                     size={19}
                     strokeWidth={1.8}
                   />
 
-                  <span>
-                    {item.label}
-                  </span>
-
+                  {!collapsed && (
+                    <span>
+                      {item.label}
+                    </span>
+                  )}
                 </NavLink>
-
               );
             }
 
             const isOpen =
               openMenus[section.title];
 
-
             return (
-
               <div key={section.title}>
 
+                {/* Group Button */}
                 <button
                   type="button"
-                  onClick={() =>
-                    toggleMenu(section.title)
-                  }
-                  className="
+                  onClick={() => {
+                    if (!collapsed) {
+                      toggleMenu(section.title);
+                    }
+                  }}
+                  title={collapsed ? section.title : ""}
+                  className={`
                     flex
                     w-full
                     items-center
-                    justify-between
                     rounded-lg
                     px-3
                     py-3
@@ -458,38 +442,40 @@ function Sidebar() {
                     transition
                     hover:bg-gray-50
                     hover:text-gray-900
-                  "
-                >
 
+                    ${collapsed ? "justify-center" : "justify-between"}
+                  `}
+                >
                   <div
-                    className="
+                    className={`
                       flex
                       items-center
-                      gap-3
-                    "
+                      ${collapsed ? "justify-center" : "gap-3"}
+                    `}
                   >
-
                     <Icon
                       size={19}
                       strokeWidth={1.8}
                     />
 
-                    <span>
-                      {section.title}
-                    </span>
-
+                    {!collapsed && (
+                      <span>
+                        {section.title}
+                      </span>
+                    )}
                   </div>
 
-                  {isOpen ? (
-                    <ChevronDown size={16} />
-                  ) : (
-                    <ChevronRight size={16} />
+                  {!collapsed && (
+                    isOpen ? (
+                      <ChevronDown size={16} />
+                    ) : (
+                      <ChevronRight size={16} />
+                    )
                   )}
-
                 </button>
 
-                {isOpen && (
-
+                {/* Submenu */}
+                {isOpen && !collapsed && (
                   <div
                     className="
                       ml-4
@@ -500,13 +486,10 @@ function Sidebar() {
                       pl-3
                     "
                   >
-
                     {section.items.map((item) => {
-
                       const ItemIcon = item.icon;
 
                       return (
-
                         <NavLink
                           key={item.path}
                           to={item.path}
@@ -529,7 +512,6 @@ function Sidebar() {
                             `
                           }
                         >
-
                           {ItemIcon && (
                             <ItemIcon
                               size={16}
@@ -540,17 +522,19 @@ function Sidebar() {
                           <span>
                             {item.label}
                           </span>
-
                         </NavLink>
                       );
                     })}
                   </div>
                 )}
+
               </div>
             );
           })}
+
         </div>
       </nav>
+
     </aside>
   );
 }
