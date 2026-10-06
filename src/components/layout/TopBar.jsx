@@ -33,9 +33,9 @@ export default function TopBar({ title = "Dashboard", onMenuClick }) {
       
       <div className="flex items-center gap-3">
         <button
-          onClick={onMenuClick}
-          className="md:hidden p-2 rounded-lg hover:bg-slate-100">
-          <Menu size={20} />
+           onClick={onMenuClick}
+           className="p-2 rounded-lg hover:bg-slate-100">
+           <Menu size={20} />
         </button>
 
         <h1 className="text-lg md:text-xl font-semibold text-slate-800">
